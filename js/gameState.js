@@ -11,7 +11,7 @@ var GameState = function (width, height) {
   };
   
   this.lightRay = new Ray({x: 10, y: 10}, {x: 50, y: 50});
-  this.rayCollisions = [];
+  this.rayCollisions = [{x: 47, y: 45, type: 'mirror'}, {x: 65, y: 26, type: 'obstacle'}, {x: 98, y: 99, type: 'top'}];
   
   this.reset();
 };

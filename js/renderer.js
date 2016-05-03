@@ -13,7 +13,7 @@ Renderer.prototype.render = function (gameState) {
 
   this.ctx.strokeStyle = 'yellow';
   this.ctx.beginPath();
-  this.ctx.moveTo(gameState.ray.position.x, gameState.ray.position.y);
-  this.ctx.lineTo(gameState.ray.position.x + gameState.ray.direction.x, gameState.ray.position.y + gameState.ray.direction.y);
+  this.ctx.moveTo(gameState.lightRay.origin.x, gameState.lightRay.origin.y);
+  this.ctx.lineTo(gameState.lightRay.origin.x + gameState.lightRay.direction.x, gameState.lightRay.origin.y + gameState.lightRay.direction.y);
   this.ctx.stroke();
 };

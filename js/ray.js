@@ -1,4 +1,4 @@
-var ray = function (origin, direction) {
+var Ray = function (origin, direction) {
   this.origin = origin;
   this.direction = direction;
 };

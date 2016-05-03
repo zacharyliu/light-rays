@@ -1,4 +1,7 @@
-var GameState = function () {
+var GameState = function (width, height) {
+  this.width = width;
+  this.height = height;
+
   // The player's state
   this.player = {
     x: 0,
@@ -6,7 +9,10 @@ var GameState = function () {
     sizeX: 30,
     sizeY: 30
   };
-
+  
+  this.lightRay = new ray({x: 10, y: 10}, {x: 50, y: 50});
+  this.rayCollisions = [];
+  
   this.reset();
 };
 

@@ -1,4 +1,4 @@
-var Renderer = function (canvas, ctx) {
+var Renderer = function (mainContainer, canvas, ctx) {
   this.canvas = canvas;
   this.ctx = ctx;
 };
@@ -7,12 +7,20 @@ var Renderer = function (canvas, ctx) {
 Renderer.prototype.render = function (gameState) {
   this.ctx.fillStyle = 'black';
   this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-  this.ctx.fillStyle = 'green';
-  this.ctx.fillRect(gameState.player.x, gameState.player.y, gameState.player.sizeX, gameState.player.sizeY);
+  
+  this._renderObjects(gameState);
 
   this._renderRay(gameState);
 };
+
+Renderer.prototype._renderObjects = function (gameState) {
+  var gameObjects = gameState.gameObjects;
+  this.ctx.fillStyle = 'green';
+  var self = this;  
+  gameObjects.forEach(function(elem, i) {
+    self.ctx.fillRect(elem.body.position.x - 10, elem.body.position.y - 10, 20, 20);
+  });
+}
 
 Renderer.prototype._renderRay = function (gameState) {
   this.ctx.strokeStyle = 'yellow';

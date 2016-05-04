@@ -1,6 +1,7 @@
 var GameInput = (function() {
 
   var pressedKeys = {};
+  var mousePos = {};
 
   function setKey(event, status) {
     var code = event.keyCode;
@@ -33,6 +34,17 @@ var GameInput = (function() {
     setKey(e, false);
   });
 
+  document.addEventListener('mousedown', function(e) {
+    // mousePos = canvas.relMouseCoords(e);
+    mousePos.x = e.offsetX;
+    mousePos.y = e.offsetY;
+    pressedKeys['MOUSE'] = true;
+  });
+
+  document.addEventListener('mouseup', function(e) {
+    pressedKeys['MOUSE'] = false;
+  });
+
   window.addEventListener('blur', function() {
     pressedKeys = {};
   });
@@ -42,9 +54,13 @@ var GameInput = (function() {
     return pressedKeys[key];
   }
 
+  function getMousePos() {
+    return mousePos;
+  }
 
   return {
-    isDown: isDown
+    isDown: isDown,
+    getMousePos: getMousePos
   };
 
 })();

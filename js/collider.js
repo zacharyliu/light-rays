@@ -21,7 +21,6 @@ Collider.prototype.collide = function (gameState) {
         y: intersection.point.y,
         type: elem.type
       });
-      console.log(intersection.point);
     }
     else {
       // no collision

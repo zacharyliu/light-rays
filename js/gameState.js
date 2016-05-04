@@ -9,7 +9,7 @@ var GameState = function (width, height) {
   this.gameObjects = [];
   
   // expecting THREE.Ray
-  this.lightRay = new THREE.Ray(new THREE.Vector3(width/2, height, 0), new THREE.Vector3(-1, -2, 0));
+  this.lightRay = new THREE.Ray(new THREE.Vector3(width/2, height, 0), new THREE.Vector3(-1, -2, 0).normalize());
 
   // {x: float, y: float, type: string}
   this.rayCollisions = [{x: 47, y: 45, type: 'mirror'}, {x: 65, y: 26, type: 'obstacle'}, {x: 98, y: 99, type: 'top'}];

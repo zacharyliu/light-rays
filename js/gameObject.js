@@ -15,6 +15,5 @@ GameObject.prototype.update = function (dt) {
 
 GameObject.prototype.testIntersect = function (ray) {
   if (!this.body) return Math.POSITIVE_INFINITY;
-  
-  // TODO: Use Matter.Query.ray to raycast
+  // TODO
 };

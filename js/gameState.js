@@ -9,8 +9,14 @@ var GameState = function (width, height) {
     sizeX: 30,
     sizeY: 30
   };
+
+  // must inherit from THREE.Object3D
+  this.gameObjects = [];
   
-  this.lightRay = new Ray({x: 10, y: 10}, {x: 50, y: 50});
+  // expecting THREE.Ray
+  this.lightRay = new THREE.Ray(new THREE.Vector3(10, 10, 0), new THREE.Vector3(50, 50, 0));
+
+  // {x: float, y: float, type: string}
   this.rayCollisions = [{x: 47, y: 45, type: 'mirror'}, {x: 65, y: 26, type: 'obstacle'}, {x: 98, y: 99, type: 'top'}];
   
   this.reset();

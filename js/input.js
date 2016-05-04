@@ -35,7 +35,6 @@ var GameInput = (function() {
   });
 
   document.addEventListener('mousedown', function(e) {
-    // mousePos = canvas.relMouseCoords(e);
     mousePos.x = e.offsetX;
     mousePos.y = e.offsetY;
     pressedKeys['MOUSE'] = true;

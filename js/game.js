@@ -12,6 +12,7 @@ var Game = function (mainContainer, canvas) {
   this.mainContainer.appendChild(this.canvas);
 
   this.gameState = new GameState(this.canvas.width, this.canvas.height);
+  this.collider = new Collider();
   
   // Don't run the game when the tab isn't visible
   window.addEventListener('focus', function () {
@@ -81,6 +82,7 @@ Game.prototype.main = function () {
   var dt = (now - this.then) / 1000.0;
 
   this.gameState.update(dt);
+  this.collider.collide(this.gameState);
   this.renderer.render(this.gameState);
 
   this.then = now;

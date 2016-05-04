@@ -42,7 +42,6 @@ GameState.prototype._placeMirror = function(x, y) {
     type: 'mirror',
     body: object
   });
-  console.log(x+ " " +y);
   return true;
 }
 

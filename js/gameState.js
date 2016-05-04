@@ -7,25 +7,35 @@ var GameState = function (width, height) {
 
   // {type: string, body: instanceof THREE.Object3D}
   this.gameObjects = [];
-  
-  // expecting THREE.Ray
-  this.lightRay = new THREE.Ray(new THREE.Vector3(width/2, height, 0), new THREE.Vector3(-1, -2, 0).normalize());
 
-  // {x: float, y: float, type: string}
-  this.rayCollisions = [{x: 47, y: 45, type: 'mirror'}, {x: 65, y: 26, type: 'obstacle'}, {x: 98, y: 99, type: 'top'}];
-  
+  this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(width/2, height, 0), new THREE.Vector3(-1, -2, 0).normalize()));
+
+  this.scene = new THREE.Scene();
+  this.scene.add(this.lightRay.body);
+
+  this._initLights();
+
   this.reset();
 };
 
+GameState.prototype._initLights = function () {
+  var light1 = new THREE.AmbientLight(Math.random() * 0xffffff);
+  this.scene.add(light1);
+
+  var light2 = new THREE.DirectionalLight(Math.random() * 0xffffff);
+  light2.position.set(Math.random(), Math.random(), Math.random()).normalize();
+  this.scene.add(light2);
+};
+
 GameState.prototype._placeMirror = function(x, y) {
-  var geometry = new THREE.BoxBufferGeometry( 20, 20, 20 );
+  var geometry = new THREE.BoxBufferGeometry( 50, 2, 10 );
   var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
   object.position.x = x;
   object.position.y = y;
   object.position.z = 0;
   // object.rotation.x = Math.random() * 2 * Math.PI;
   // object.rotation.y = Math.random() * 2 * Math.PI;
-  // object.rotation.z = Math.random() * 2 * Math.PI;
+  object.rotation.z = Math.random() * 2 * Math.PI;
   //
   var bbox = new THREE.Box3().setFromObject(object);
   var hasIntersection = false;
@@ -42,6 +52,7 @@ GameState.prototype._placeMirror = function(x, y) {
     type: 'mirror',
     body: object
   });
+  this.scene.add(object);
   return true;
 }
 

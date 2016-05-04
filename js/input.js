@@ -1,4 +1,4 @@
-var GameInput = (function() {
+var GameInputFactory = function (canvas) {
 
   var pressedKeys = {};
   var mousePos = {};
@@ -34,13 +34,13 @@ var GameInput = (function() {
     setKey(e, false);
   });
 
-  document.addEventListener('mousedown', function(e) {
+  canvas.addEventListener('mousedown', function(e) {
     mousePos.x = e.offsetX;
     mousePos.y = e.offsetY;
     pressedKeys['MOUSE'] = true;
   });
 
-  document.addEventListener('mouseup', function(e) {
+  canvas.addEventListener('mouseup', function(e) {
     pressedKeys['MOUSE'] = false;
   });
 
@@ -62,4 +62,4 @@ var GameInput = (function() {
     getMousePos: getMousePos
   };
 
-})();
+};

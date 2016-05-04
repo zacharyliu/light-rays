@@ -4,7 +4,7 @@ var Collider = function () {
 
 Collider.prototype.collide = function (gameState) {
   var rayCollisions = [];
-  var ray = gameState.lightRay;
+  var ray = gameState.lightRay.ray;
   var gameObjects = gameState.gameObjects;
 
   this.raycaster.set(ray.origin, ray.direction);
@@ -17,8 +17,7 @@ Collider.prototype.collide = function (gameState) {
       }
       var intersection = intersections[0];
       rayCollisions.push({
-        x: intersection.point.x,
-        y: intersection.point.y,
+        point: intersection.point,
         type: elem.type
       });
     }
@@ -26,5 +25,5 @@ Collider.prototype.collide = function (gameState) {
       // no collision
     }
   });  
-  gameState.rayCollisions = rayCollisions;
+  gameState.lightRay.updateRayCollisions(rayCollisions);
 };

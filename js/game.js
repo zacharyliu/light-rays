@@ -3,17 +3,17 @@ var Game = function (mainContainer, canvas) {
 
   this.mainContainer = mainContainer;
   this.canvas = canvas;
-  this.ctx = canvas.getContext("2d");
   
-  this.renderer = new Renderer(this.mainContainer, this.canvas, this.ctx);
-
   this.initialCanvasWidth = this.canvas.width = 320;
   this.initialCanvasHeight = this.canvas.height = 480;
   this.mainContainer.appendChild(this.canvas);
 
   this.gameState = new GameState(this.canvas.width, this.canvas.height);
   this.collider = new Collider();
-  
+
+  this.renderer = new Renderer(this.canvas);
+  this.renderer.initScene(this.gameState.scene);
+
   // Don't run the game when the tab isn't visible
   window.addEventListener('focus', function () {
     self.unpause();
@@ -23,7 +23,7 @@ var Game = function (mainContainer, canvas) {
     self.pause();
   });
 
-  window.addEventListener('resize', this.resize);
+  window.addEventListener('resize', this._resize.bind(this));
 
   //Initially resize the game canvas.
   this._resize();
@@ -59,6 +59,8 @@ Game.prototype._resize = function () {
   var rule = "translate(" + offset[0] + "px, " + offset[1] + "px) scale(" + scale + ")";
   this.mainContainer.style.transform = rule;
   this.mainContainer.style.webkitTransform = rule;
+
+  this.renderer.cameraControls && this.renderer.cameraControls.handleResize();
 };
 
 // Pause and unpause
@@ -83,7 +85,7 @@ Game.prototype.main = function () {
 
   this.gameState.update(dt);
   this.collider.collide(this.gameState);
-  this.renderer.render(this.gameState);
+  this.renderer.render(this.gameState.scene);
 
   this.then = now;
   requestAnimationFrame(this.main.bind(this));

@@ -8,14 +8,18 @@ var Mirror = function (position) {
   // object.rotation.y = Math.random() * 2 * Math.PI;
   object.rotation.z = Math.random() * 2 * Math.PI;
   this.body = object;
-  // this.body.entity = this;
+  this.body.userData.entity = this;
 };
 
 Mirror.prototype = Object.create(GameObject.prototype);
 
-Mirror.prototype.onIntersectRay = function (intersection) {
-  // check if face is front face
-  
+Mirror.prototype.reflectIntersection = function (ray, intersection) {
+  // TODO: check if face is front face
+  var normal = intersection.face.normal.clone().applyEuler(intersection.object.rotation);
+  var newRay = ray.clone();
+  newRay.origin.copy(intersection.point);
+  newRay.direction.reflect(normal);
+  return newRay;
 };
 
 Mirror.prototype.hasIntersection = function (gameObjects) {

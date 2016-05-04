@@ -28,31 +28,15 @@ GameState.prototype._initLights = function () {
 };
 
 GameState.prototype._placeMirror = function(x, y) {
-  var geometry = new THREE.BoxBufferGeometry( 50, 2, 10 );
-  var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-  object.position.x = x;
-  object.position.y = y;
-  object.position.z = 0;
-  // object.rotation.x = Math.random() * 2 * Math.PI;
-  // object.rotation.y = Math.random() * 2 * Math.PI;
-  object.rotation.z = Math.random() * 2 * Math.PI;
-  //
-  var bbox = new THREE.Box3().setFromObject(object);
-  var hasIntersection = false;
-  this.gameObjects.forEach(function(elem, i) {
-    var bboxOther = new THREE.Box3().setFromObject(elem.body);
-    hasIntersection = hasIntersection || bbox.intersectsBox(bboxOther);
-  });
-  if (hasIntersection) {
+  var mirror = new Mirror(new THREE.Vector3(x, y, 0));
+  
+  if (mirror.hasIntersection(this.gameObjects)) {
     // don't place the box
     return false;
   }
-  //
-  this.gameObjects.push({
-    type: 'mirror',
-    body: object
-  });
-  this.scene.add(object);
+  
+  this.gameObjects.push(mirror);
+  this.scene.add(mirror.body);
   return true;
 }
 

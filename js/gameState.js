@@ -25,6 +25,12 @@ var GameState = function () {
   ];
   for (var wall of this.walls) this.scene.add(wall.body);
 
+  this.ceiling = GameObject.createBox(GameState.WIDTH, 1, new THREE.Vector3(GameState.WIDTH / 2, 0, 0));
+  this.scene.add(this.ceiling.body);
+
+  this.floor = GameObject.createBox(GameState.WIDTH, 1, new THREE.Vector3(GameState.WIDTH / 2, GameState.HEIGHT, 0));
+  this.scene.add(this.floor.body);
+
   this.collider = new Collider();
 
   this._initLights();
@@ -96,7 +102,9 @@ GameState.prototype.update = function (dt) {
 
   for (let obj of this.gameObjects) obj.update(dt);
 
-  this.collider.collide(this.lightRay, [].concat(this.gameObjects, this.walls));
+  var collideObjects = [].concat(this.gameObjects, this.walls);
+  collideObjects.push(this.ceiling, this.floor);
+  this.collider.collide(this.lightRay, collideObjects);
 
   // Clear dead game objects (below screen and not colliding)
   for (let i = this.gameObjects.length - 1; i >= 0; i--) {

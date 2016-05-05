@@ -4,6 +4,9 @@ var GameObject = function (body, opts) {
   this.body = body;
   this.body.userData.entity = this;
 
+  this.body.position.copy(opts.position);
+  if (opts.angle) this.body.rotation.z = opts.angle;
+
   // Whether this object has collided since the previous update
   this.isColliding = false;
 };
@@ -16,4 +19,11 @@ GameObject.prototype.update = function (dt) {
 GameObject.prototype.testIntersect = function (ray) {
   if (!this.body) return Math.POSITIVE_INFINITY;
   // TODO
+};
+
+GameObject.createBox = function (width, height, position) {
+  var body = new THREE.Mesh( new THREE.BoxGeometry(width, height, 10), new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+  return new GameObject(body, {
+    position: position
+  });
 };

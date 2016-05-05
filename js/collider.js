@@ -8,6 +8,11 @@ Collider.prototype.collide = function (lightRay, objects) {
 
   var doRaycast = true;
   while (doRaycast) {
+    if (intersections.length > 500) {
+      console.warn("Exceeded 500 intersections");
+      break;
+    }
+
     doRaycast = false;
     this.raycaster.set(ray.origin, ray.direction);
     var result = this.raycaster.intersectObjects(objects.map(function (e) {

@@ -1,6 +1,8 @@
 var GameState = function () {
   // mouse state
   this.mouseIsDown = false;
+  this.mouseRaycaster  = new THREE.Raycaster();
+  this.mouseOverObject = null;
 
   // TODO: Increase velocity as game progresses (level system?)
   this.velocity = new THREE.Vector3(0, 50, 0);
@@ -55,7 +57,7 @@ GameState.prototype._initLights = function () {
 
 GameState.prototype._placeMirror = function(x, y) {
   var mirror = new Mirror({
-    length: 35 + Math.random() * 30,
+    length: 50,
     position: new THREE.Vector3(x, y, 0),
     angle: Math.random() * 2 * Math.PI,
     velocity: this.velocity
@@ -65,6 +67,8 @@ GameState.prototype._placeMirror = function(x, y) {
     // don't place the box
     return false;
   }
+
+  mirror.state = Mirror.State.SELECTED;
   
   this.gameObjects.push(mirror);
   this.scene.add(mirror.body);
@@ -99,6 +103,31 @@ GameState.prototype.update = function (dt) {
     }
   }
   this.mouseIsDown = isDown;
+
+  GameInput.updateRaycaster(this.mouseRaycaster);
+
+  // based on: https://github.com/mrdoob/three.js/blob/master/examples/webgl_interactive_cubes_ortho.html
+  let intersects = this.mouseRaycaster.intersectObjects(this.gameObjects.map(e => e.mouseOverBody));
+  if (intersects.length > 0) {
+    let obj = intersects[0].object.userData.entity;
+    if (this.mouseOverObject != obj) {
+      if (this.mouseOverObject) {
+        this.mouseOverObject.isMouseOver = false;
+        this.mouseOverObject.body.material.emissive.setHex(this.mouseOverObject.currentHex);
+      }
+      this.mouseOverObject = obj;
+      this.mouseOverObject.isMouseOver = true;
+
+      this.mouseOverObject.currentHex = this.mouseOverObject.body.material.emissive.getHex();
+      this.mouseOverObject.body.material.emissive.setHex( 0xff0000 );
+    }
+  } else {
+    if (this.mouseOverObject) {
+      this.mouseOverObject.isMouseOver = false;
+      this.mouseOverObject.body.material.emissive.setHex(this.mouseOverObject.currentHex);
+    }
+    this.mouseOverObject = null;
+  }
 
   this.lightRay.update(dt);
 

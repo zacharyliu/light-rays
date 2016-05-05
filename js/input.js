@@ -1,7 +1,9 @@
-var GameInputFactory = function (canvas) {
+var GameInputFactory = function (renderer) {
+  var canvas = renderer.canvas;
+  var camera = renderer.camera;
 
   var pressedKeys = {};
-  var mousePos = {};
+  var mousePos = new THREE.Vector3();
 
   function setKey(event, status) {
     var code = event.keyCode;
@@ -61,9 +63,18 @@ var GameInputFactory = function (canvas) {
     return mousePos;
   }
 
+  /**
+   * Update the given raycaster with the current mouse position.
+   * @param raycaster {THREE.Raycaster}
+   */
+  function updateRaycaster(raycaster) {
+    raycaster.set(camera.position, getMousePos().clone().sub(camera.position).normalize());
+  }
+
   return {
     isDown: isDown,
-    getMousePos: getMousePos
+    getMousePos: getMousePos,
+    updateRaycaster: updateRaycaster
   };
 
 };

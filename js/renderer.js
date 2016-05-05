@@ -9,9 +9,9 @@ var Renderer = function (canvas) {
   this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, preserveDrawingBuffer: true});
   this.renderer.setClearColor(0x444444);
 
-  // this.camera = new THREE.PerspectiveCamera(35, canvas.width / canvas.height, 1, 10000);
-  this.camera = new THREE.OrthographicCamera(GameState.WIDTH / -2, GameState.WIDTH / 2, GameState.HEIGHT / 2, GameState.HEIGHT / -2, 1, 1000);
-  this.camera.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2, -100);
+  this.camera = new THREE.PerspectiveCamera(50, GameState.WIDTH / GameState.HEIGHT, 1, 10000);
+  // this.camera = new THREE.OrthographicCamera(GameState.WIDTH / -2, GameState.WIDTH / 2, GameState.HEIGHT / 2, GameState.HEIGHT / -2, 1, 1000);
+  this.camera.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2, -520);
   this.camera.rotation.set(Math.PI, 0, 0);
 
   // this.cameraControls = new THREE.TrackballControls(this.camera, canvas);

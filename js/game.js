@@ -3,7 +3,6 @@ var Game = function (mainContainer) {
 
   this.mainContainer = mainContainer;
   this.canvas = document.createElement("canvas");
-  window.GameInput = GameInputFactory(this.canvas);
   
   this.initialCanvasWidth = this.canvas.width = GameState.WIDTH;
   this.initialCanvasHeight = this.canvas.height = GameState.HEIGHT;
@@ -13,6 +12,8 @@ var Game = function (mainContainer) {
 
   this.renderer = new Renderer(this.canvas);
   this.renderer.initScene(this.gameState.scene);
+
+  window.GameInput = GameInputFactory(this.renderer);
 
   // Don't run the game when the tab isn't visible
   window.addEventListener('focus', function () {

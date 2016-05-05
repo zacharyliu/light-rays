@@ -36,19 +36,19 @@ var GameInputFactory = function (renderer) {
     setKey(e, false);
   });
 
-  canvas.addEventListener('mousemove', function (e) {
+  ['mousemove', 'touchmove', 'touchstart'].forEach(type => canvas.addEventListener(type, function (e) {
     // Scale position to game coordinate system
     mousePos.x = e.offsetX / parseFloat(e.target.style.width) * GameState.WIDTH;
     mousePos.y = e.offsetY / parseFloat(e.target.style.height) * GameState.HEIGHT;
-  });
+  }));
 
-  canvas.addEventListener('mousedown', function(e) {
+  ['mousedown', 'touchstart'].forEach(type => canvas.addEventListener(type, function(e) {
     pressedKeys['MOUSE'] = true;
-  });
+  }));
 
-  canvas.addEventListener('mouseup', function(e) {
+  ['mouseup', 'touchend'].forEach(type => canvas.addEventListener(type, function(e) {
     pressedKeys['MOUSE'] = false;
-  });
+  }));
 
   window.addEventListener('blur', function() {
     pressedKeys = {};

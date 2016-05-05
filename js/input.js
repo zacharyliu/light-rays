@@ -34,10 +34,13 @@ var GameInputFactory = function (canvas) {
     setKey(e, false);
   });
 
-  canvas.addEventListener('mousedown', function(e) {
+  canvas.addEventListener('mousemove', function (e) {
     // Scale position to game coordinate system
     mousePos.x = e.offsetX / e.target.width * GameState.WIDTH;
     mousePos.y = e.offsetY / e.target.height * GameState.HEIGHT;
+  });
+
+  canvas.addEventListener('mousedown', function(e) {
     pressedKeys['MOUSE'] = true;
   });
 

@@ -26,7 +26,7 @@ Mirror.prototype = Object.create(GameObject.prototype);
 Mirror.prototype.update = function (dt) {
   GameObject.prototype.update.call(this, dt);
   
-  if (this.state == Mirror.State.SELECTED) this.body.lookAt(GameInput.getMousePos());
+  if (this.state == Mirror.State.SELECTED) this.body.lookAt(GameInput.getMousePos().clone().add(this.body.position).sub(this.initialPosition));
 
   let newState;
   switch (this.state) {
@@ -78,10 +78,17 @@ Mirror.prototype.hasIntersection = function (gameObjects) {
 };
 
 Mirror.prototype.setState = function (newState) {
+  // Update material
   if (newState == Mirror.State.SELECTED || newState == Mirror.State.HOVERING) {
     this.body.material.emissive.setHex( 0xff0000 );
   } else {
     this.body.material.emissive.setHex( this.originalHex );
   }
+
+  // Save initial mouse position
+  if (newState == Mirror.State.SELECTED) {
+    this.initialPosition = this.body.position.clone();
+  }
+
   this.state = newState;
 };

@@ -15,7 +15,11 @@ Collider.prototype.collide = function (lightRay, objects) {
     }));
     for (var intersection of result) {
       intersections.push(intersection);
-      var reflectIntersection = intersection.object.userData.entity.reflectIntersection;
+      
+      var entity = intersection.object.userData.entity;
+      entity.isColliding = true;
+      
+      var reflectIntersection = entity.reflectIntersection;
       var newRay;
       if (reflectIntersection && (newRay = reflectIntersection(ray, intersection))) {
         ray = newRay;

@@ -68,7 +68,7 @@ GameState.prototype._placeMirror = function(x, y) {
     return false;
   }
 
-  mirror.state = Mirror.State.SELECTED;
+  mirror.setState(Mirror.State.SELECTED);
   
   this.gameObjects.push(mirror);
   this.scene.add(mirror.body);
@@ -91,7 +91,7 @@ GameState.prototype.update = function (dt) {
     else {
       // down
       var mousePos = GameInput.getMousePos();
-      this._placeMirror(mousePos.x, mousePos.y);
+      if (!this.mouseOverObject) this._placeMirror(mousePos.x, mousePos.y);
     }
   }
   else {
@@ -111,21 +111,12 @@ GameState.prototype.update = function (dt) {
   if (intersects.length > 0) {
     let obj = intersects[0].object.userData.entity;
     if (this.mouseOverObject != obj) {
-      if (this.mouseOverObject) {
-        this.mouseOverObject.isMouseOver = false;
-        this.mouseOverObject.body.material.emissive.setHex(this.mouseOverObject.currentHex);
-      }
+      if (this.mouseOverObject) this.mouseOverObject.isMouseOver = false;
       this.mouseOverObject = obj;
       this.mouseOverObject.isMouseOver = true;
-
-      this.mouseOverObject.currentHex = this.mouseOverObject.body.material.emissive.getHex();
-      this.mouseOverObject.body.material.emissive.setHex( 0xff0000 );
     }
   } else {
-    if (this.mouseOverObject) {
-      this.mouseOverObject.isMouseOver = false;
-      this.mouseOverObject.body.material.emissive.setHex(this.mouseOverObject.currentHex);
-    }
+    if (this.mouseOverObject) this.mouseOverObject.isMouseOver = false;
     this.mouseOverObject = null;
   }
 

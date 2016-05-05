@@ -7,6 +7,8 @@ var Mirror = function (opts) {
   var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
   opts.mouseOverBody = new THREE.Mesh(new THREE.SphereGeometry(opts.length / 2 + 10), new THREE.MeshBasicMaterial({visible: false}));
 
+  this.originalHex = object.material.emissive.getHex();
+
   GameObject.call(this, object, opts);
 };
 
@@ -28,18 +30,25 @@ Mirror.prototype.update = function (dt) {
 
   let newState;
   switch (this.state) {
+    case Mirror.State.NORMAL:
+      if (this.isMouseOver && !GameInput.isDown('MOUSE')) {
+        newState = Mirror.State.HOVERING;
+      }
+      break;
     case Mirror.State.SELECTED:
       if (!GameInput.isDown('MOUSE')) {
         newState = this.isMouseOver ? Mirror.State.HOVERING : Mirror.State.NORMAL;
       }
       break;
     case Mirror.State.HOVERING:
-      if (GameInput.isDown('MOUSE')) {
+      if (!this.isMouseOver) {
+        newState = Mirror.State.NORMAL;
+      } else if (GameInput.isDown('MOUSE')) {
         newState = Mirror.State.SELECTED;
       }
       break;
   }
-  if (newState != null) this.state = newState;
+  if (newState != null) this.setState(newState);
 };
 
 Mirror.prototype.shouldReflectIntersection = function () {
@@ -66,4 +75,13 @@ Mirror.prototype.hasIntersection = function (gameObjects) {
     hasIntersection = hasIntersection || bbox.intersectsBox(bboxOther);
   });
   return hasIntersection;
+};
+
+Mirror.prototype.setState = function (newState) {
+  if (newState == Mirror.State.SELECTED || newState == Mirror.State.HOVERING) {
+    this.body.material.emissive.setHex( 0xff0000 );
+  } else {
+    this.body.material.emissive.setHex( this.originalHex );
+  }
+  this.state = newState;
 };

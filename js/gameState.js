@@ -8,27 +8,27 @@ var GameState = function () {
   // {type: string, body: instanceof THREE.Object3D}
   this.gameObjects = [];
 
-  this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(GameState.WIDTH/2, GameState.HEIGHT, 0), new THREE.Vector3(-1, -2, 0).normalize()));
+  this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(GameState.WIDTH/2, GameState.HEIGHT, 0), new THREE.Vector3(-1, -2, 0).normalize()), this.velocity);
 
   this.scene = new THREE.Scene();
   this.scene.add(this.lightRay.body);
 
   this.walls = [
     new Mirror({
-      length: GameState.HEIGHT,
-      position: new THREE.Vector3(0, GameState.HEIGHT / 2, 0)
+      length: GameState.HEIGHT * 2,
+      position: new THREE.Vector3(0, GameState.HEIGHT, 0)
     }),
     new Mirror({
-      length: GameState.HEIGHT,
-      position: new THREE.Vector3(GameState.WIDTH, GameState.HEIGHT / 2, 0)
+      length: GameState.HEIGHT * 2,
+      position: new THREE.Vector3(GameState.WIDTH, GameState.HEIGHT, 0)
     })
   ];
   for (var wall of this.walls) this.scene.add(wall.body);
 
-  this.ceiling = GameObject.createBox(GameState.WIDTH, 1, new THREE.Vector3(GameState.WIDTH / 2, 0, 0));
+  this.ceiling = GameObject.createBox(GameState.WIDTH, 0, new THREE.Vector3(GameState.WIDTH / 2, 0, 0));
   this.scene.add(this.ceiling.body);
 
-  this.floor = GameObject.createBox(GameState.WIDTH, 1, new THREE.Vector3(GameState.WIDTH / 2, GameState.HEIGHT, 0));
+  this.floor = GameObject.createBox(GameState.WIDTH, 0, new THREE.Vector3(GameState.WIDTH / 2, GameState.HEIGHT, 0));
   this.scene.add(this.floor.body);
 
   this.collider = new Collider();
@@ -100,10 +100,12 @@ GameState.prototype.update = function (dt) {
   }
   this.mouseIsDown = isDown;
 
-  for (let obj of this.gameObjects) obj.update(dt);
+  this.lightRay.update(dt);
 
   var collideObjects = [].concat(this.gameObjects, this.walls);
   collideObjects.push(this.ceiling, this.floor);
+
+  for (let obj of collideObjects) obj.update(dt);
   this.collider.collide(this.lightRay, collideObjects);
 
   // Clear dead game objects (below screen and not colliding)
@@ -113,6 +115,14 @@ GameState.prototype.update = function (dt) {
       this.scene.remove(obj.body);
       this.gameObjects.splice(i, 1);
     }
+  }
+
+  // Move light ray origin back to bottom of scene
+  if (this.floor.isColliding) {
+    let intersection = this.floor.intersections[0];
+    this.lightRay.ray = new THREE.Ray(intersection.point.clone(), intersection.ray.direction);
+  } else {
+    // TODO: game over state - light ray left the scene
   }
 };
 

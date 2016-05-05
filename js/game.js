@@ -31,6 +31,8 @@ var Game = function (mainContainer) {
   // Let's play this game!
   this.then = Date.now();
   this.running = true;
+  // FIXME: collider only works properly if a render is performed before the initial update
+  this.renderer.render(this.gameState.scene);
   this.main();
 };
 

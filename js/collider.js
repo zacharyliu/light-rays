@@ -14,16 +14,19 @@ Collider.prototype.collide = function (lightRay, objects) {
       return e.body;
     }));
     for (var intersection of result) {
+      var entity = intersection.object.userData.entity;
+      // if (!entity.shouldCollide) continue;
+      
+      intersection.ray = ray;
       intersections.push(intersection);
       
-      var entity = intersection.object.userData.entity;
       entity.isColliding = true;
+      entity.intersections.push(intersection);
       
       var reflectIntersection = entity.reflectIntersection;
       var newRay;
       if (reflectIntersection && (newRay = reflectIntersection(ray, intersection))) {
         ray = newRay;
-        this.raycaster.set(ray.origin, ray.direction);
         doRaycast = true;
         break;
       }

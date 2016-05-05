@@ -32,8 +32,3 @@ LightRay.prototype.updateRayCollisions = function (newRayCollisions) {
   this.bodyGeometry.attributes.position.needsUpdate = true;
   this.bodyGeometry.setDrawRange(0, this.rayCollisions.length + 1);
 };
-
-LightRay.prototype.update = function (dt) {
-  // TODO: remove light ray rotation demo
-  this.ray.direction.applyAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI / 2 * dt);
-};

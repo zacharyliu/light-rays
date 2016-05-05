@@ -8,7 +8,7 @@ var GameState = function () {
   // {type: string, body: instanceof THREE.Object3D}
   this.gameObjects = [];
 
-  this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(GameState.WIDTH/2, GameState.HEIGHT/2, 0), new THREE.Vector3(-1, -2, 0).normalize()));
+  this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(GameState.WIDTH/2, GameState.HEIGHT, 0), new THREE.Vector3(-1, -2, 0).normalize()));
 
   this.scene = new THREE.Scene();
   this.scene.add(this.lightRay.body);
@@ -94,7 +94,6 @@ GameState.prototype.update = function (dt) {
   }
   this.mouseIsDown = isDown;
 
-  this.lightRay.update(dt);
   for (let obj of this.gameObjects) obj.update(dt);
 
   this.collider.collide(this.lightRay, [].concat(this.gameObjects, this.walls));

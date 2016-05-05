@@ -2,16 +2,15 @@ var Collider = function () {
   this.raycaster = new THREE.Raycaster();
 };
 
-Collider.prototype.collide = function (gameState) {
-  var ray = gameState.lightRay.ray;
-  var gameObjects = gameState.gameObjects;
+Collider.prototype.collide = function (lightRay, objects) {
+  var ray = lightRay.ray;
   var intersections = [];
 
   var doRaycast = true;
   while (doRaycast) {
     doRaycast = false;
     this.raycaster.set(ray.origin, ray.direction);
-    var result = this.raycaster.intersectObjects(gameObjects.map(function (e) {
+    var result = this.raycaster.intersectObjects(objects.map(function (e) {
       return e.body;
     }));
     for (var intersection of result) {
@@ -27,5 +26,5 @@ Collider.prototype.collide = function (gameState) {
     }
   }
 
-  gameState.lightRay.updateRayCollisions(intersections);
+  lightRay.updateRayCollisions(intersections);
 };

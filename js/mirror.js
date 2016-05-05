@@ -1,14 +1,13 @@
-var Mirror = function (position) {
+var Mirror = function (opts) {
   this.type = 'mirror';
 
-  var geometry = new THREE.BoxBufferGeometry( 50, 2, 10 );
+  opts = opts || {};
+  var geometry = new THREE.BoxBufferGeometry( 2, opts.length || 50, 10 );
   var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
-  object.position.copy(position);
-  // object.rotation.x = Math.random() * 2 * Math.PI;
-  // object.rotation.y = Math.random() * 2 * Math.PI;
-  object.rotation.z = Math.random() * 2 * Math.PI;
-  this.body = object;
-  this.body.userData.entity = this;
+  object.position.copy(opts.position);
+  if (opts.angle) object.rotation.z = opts.angle;
+
+  GameObject.call(this, object, opts);
 };
 
 Mirror.prototype = Object.create(GameObject.prototype);

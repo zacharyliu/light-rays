@@ -8,10 +8,24 @@ var GameState = function (width, height) {
   // {type: string, body: instanceof THREE.Object3D}
   this.gameObjects = [];
 
-  this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(width/2, height, 0), new THREE.Vector3(-1, -2, 0).normalize()));
+  this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(width/2, height/2, 0), new THREE.Vector3(-1, -2, 0).normalize()));
 
   this.scene = new THREE.Scene();
   this.scene.add(this.lightRay.body);
+
+  this.walls = [
+    new Mirror({
+      length: height,
+      position: new THREE.Vector3(0, height / 2, 0)
+    }),
+    new Mirror({
+      length: height,
+      position: new THREE.Vector3(width, height / 2, 0)
+    })
+  ];
+  for (var wall of this.walls) this.scene.add(wall.body);
+
+  this.collider = new Collider();
 
   this._initLights();
 
@@ -28,7 +42,11 @@ GameState.prototype._initLights = function () {
 };
 
 GameState.prototype._placeMirror = function(x, y) {
-  var mirror = new Mirror(new THREE.Vector3(x, y, 0));
+  var mirror = new Mirror({
+    length: 35 + Math.random() * 30,
+    position: new THREE.Vector3(x, y, 0),
+    angle: Math.random() * 2 * Math.PI
+  });
   
   if (mirror.hasIntersection(this.gameObjects)) {
     // don't place the box
@@ -68,6 +86,11 @@ GameState.prototype.update = function (dt) {
     }
   }
   this.mouseIsDown = isDown;
+
+  this.lightRay.update(dt);
+  for (var obj of this.gameObjects) obj.update();
+
+  this.collider.collide(this.lightRay, [].concat(this.gameObjects, this.walls));
 };
 
 // Reset game to original state

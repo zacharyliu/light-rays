@@ -1,16 +1,12 @@
-var GameObject = function (position, width, height) {
-  this.velocity = 0;
-  this.position = position;
-  this.width = width;
-  this.height = height;
-
-  this.center = this.position.clone();
-  this.center.x += width / 2;
-  this.center.y += height / 2;
+var GameObject = function (body, opts) {
+  opts = opts || {};
+  this.velocity = opts.velocity || new THREE.Vector3();
+  this.body = body;
+  this.body.userData.entity = this;
 };
 
 GameObject.prototype.update = function (dt) {
-  this.position.y += this.velocity * dt;
+  this.body.position.add(this.velocity.clone().multiplyScalar(dt));
 };
 
 GameObject.prototype.testIntersect = function (ray) {

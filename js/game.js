@@ -1,8 +1,9 @@
-var Game = function (mainContainer, canvas) {
+var Game = function (mainContainer) {
   var self = this;
 
   this.mainContainer = mainContainer;
-  this.canvas = canvas;
+  this.canvas = document.createElement("canvas");
+  window.GameInput = GameInputFactory(this.canvas);
   
   this.initialCanvasWidth = this.canvas.width = 320;
   this.initialCanvasHeight = this.canvas.height = 480;

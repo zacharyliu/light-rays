@@ -120,7 +120,7 @@ GameState.prototype.update = function (dt) {
   // Move light ray origin back to bottom of scene
   if (this.floor.isColliding) {
     let intersection = this.floor.intersections[0];
-    this.lightRay.ray = new THREE.Ray(intersection.point.clone(), intersection.ray.direction);
+    this.lightRay.ray = intersection.ray;
   } else {
     // TODO: game over state - light ray left the scene
   }

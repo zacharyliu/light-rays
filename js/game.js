@@ -5,11 +5,11 @@ var Game = function (mainContainer) {
   this.canvas = document.createElement("canvas");
   window.GameInput = GameInputFactory(this.canvas);
   
-  this.initialCanvasWidth = this.canvas.width = 320;
-  this.initialCanvasHeight = this.canvas.height = 480;
+  this.initialCanvasWidth = this.canvas.width = GameState.WIDTH;
+  this.initialCanvasHeight = this.canvas.height = GameState.HEIGHT;
   this.mainContainer.appendChild(this.canvas);
 
-  this.gameState = new GameState(this.canvas.width, this.canvas.height);
+  this.gameState = new GameState();
 
   this.renderer = new Renderer(this.canvas);
   this.renderer.initScene(this.gameState.scene);
@@ -56,11 +56,11 @@ Game.prototype._resize = function () {
   ];
 
   // Apply CSS transform
-  var rule = "translate(" + offset[0] + "px, " + offset[1] + "px) scale(" + scale + ")";
+  var rule = "translate(" + offset[0] + "px, " + offset[1] + "px)";
   this.mainContainer.style.transform = rule;
   this.mainContainer.style.webkitTransform = rule;
 
-  this.renderer.cameraControls && this.renderer.cameraControls.handleResize();
+  this.renderer.resize(size[0], size[1]);
 };
 
 // Pause and unpause

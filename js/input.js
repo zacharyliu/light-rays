@@ -35,8 +35,9 @@ var GameInputFactory = function (canvas) {
   });
 
   canvas.addEventListener('mousedown', function(e) {
-    mousePos.x = e.offsetX;
-    mousePos.y = e.offsetY;
+    // Scale position to game coordinate system
+    mousePos.x = e.offsetX / e.target.width * GameState.WIDTH;
+    mousePos.y = e.offsetY / e.target.height * GameState.HEIGHT;
     pressedKeys['MOUSE'] = true;
   });
 

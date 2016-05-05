@@ -1,26 +1,23 @@
-var GameState = function (width, height) {
-  this.width = width;
-  this.height = height;
-
+var GameState = function () {
   // mouse state
   this.mouseIsDown = false;
 
   // {type: string, body: instanceof THREE.Object3D}
   this.gameObjects = [];
 
-  this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(width/2, height/2, 0), new THREE.Vector3(-1, -2, 0).normalize()));
+  this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(GameState.WIDTH/2, GameState.HEIGHT/2, 0), new THREE.Vector3(-1, -2, 0).normalize()));
 
   this.scene = new THREE.Scene();
   this.scene.add(this.lightRay.body);
 
   this.walls = [
     new Mirror({
-      length: height,
-      position: new THREE.Vector3(0, height / 2, 0)
+      length: GameState.HEIGHT,
+      position: new THREE.Vector3(0, GameState.HEIGHT / 2, 0)
     }),
     new Mirror({
-      length: height,
-      position: new THREE.Vector3(width, height / 2, 0)
+      length: GameState.HEIGHT,
+      position: new THREE.Vector3(GameState.WIDTH, GameState.HEIGHT / 2, 0)
     })
   ];
   for (var wall of this.walls) this.scene.add(wall.body);
@@ -31,6 +28,10 @@ var GameState = function (width, height) {
 
   this.reset();
 };
+
+GameState.WIDTH = 320;
+
+GameState.HEIGHT = 480;
 
 GameState.prototype._initLights = function () {
   var light1 = new THREE.AmbientLight(Math.random() * 0xffffff);

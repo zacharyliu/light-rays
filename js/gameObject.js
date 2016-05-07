@@ -18,7 +18,7 @@ var GameObject = function (body, opts) {
   this.body.position.copy(opts.position);
   this.body.rotation.order = "ZXY";
   this.body.rotation.y = Math.PI / 2;
-  if (opts.angle) this.body.rotation.z = opts.angle;
+  this.body.rotation.z = opts.hasOwnProperty('angle') ? opts.angle : 0;
 
   // Whether this object has collided since the previous update
   this.isColliding = false;

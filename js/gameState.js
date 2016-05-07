@@ -37,6 +37,8 @@ var GameState = function () {
   this.scene.add(this.floor.body);
 
   this.collider = new Collider();
+  
+  this.timeSinceLastObstacle = Number.POSITIVE_INFINITY;
 
   this._initLights();
 
@@ -106,6 +108,20 @@ GameState.prototype.update = function (dt) {
     }
   }
   this.mouseIsDown = isDown;
+  
+  // Spawn obstacles
+  this.timeSinceLastObstacle += dt;
+  if (this.timeSinceLastObstacle > 2) {
+    this.timeSinceLastObstacle = 0;
+    let obstacle = new Obstacle({
+      width: 100,
+      height: 10,
+      position: new THREE.Vector3(Math.random() * GameState.WIDTH, 0, 0),
+      velocity: this.velocity
+    });
+    this.gameObjects.push(obstacle);
+    this.scene.add(obstacle.body);
+  }
 
   GameInput.updateRaycaster(this.mouseRaycaster);
 

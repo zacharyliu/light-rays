@@ -97,6 +97,7 @@ THREE.GPUParticleSystem = function(options) {
 
       'uniform float uTime;',
       'uniform float uScale;',
+      'uniform float uVelocityScale;',
       'uniform sampler2D tNoise;',
 
       'attribute vec4 particlePositionsStartTime;',
@@ -124,9 +125,9 @@ THREE.GPUParticleSystem = function(options) {
 
       'gl_PointSize = ( uScale * particleVelColSizeLife.z ) * lifeLeft;',
 
-      'velocity.x = particleWind.x + ( velocity.x - .5 ) * 3.;',
-      'velocity.y = particleWind.y + ( velocity.y - .5 ) * 3.;',
-      'velocity.z = particleWind.z + ( velocity.z - .5 ) * 3.;',
+      'velocity.x = particleWind.x + ( velocity.x - .5 ) * uVelocityScale;',
+      'velocity.y = particleWind.y + ( velocity.y - .5 ) * uVelocityScale;',
+      'velocity.z = particleWind.z + ( velocity.z - .5 ) * uVelocityScale;',
 
       'newPosition = particlePositionsStartTime.xyz + ( velocity * 10. ) * ( uTime - particlePositionsStartTime.a );',
 
@@ -226,6 +227,10 @@ THREE.GPUParticleSystem = function(options) {
       "tSprite": {
         type: "t",
         value: self.particleSpriteTex
+      },
+      "uVelocityScale": {
+        type: "f",
+        value: options.velocityScale !== undefined ? options.velocityScale : 3.
       }
     },
     blending: THREE.AdditiveBlending,

@@ -13,6 +13,25 @@ var LightRay = function (ray, velocity) {
     color: 0xffff00,
     linewidth: 3 // TODO: linewidth doesn't work on Windows
   }));
+
+  this.particleSystem = new THREE.GPUParticleSystem({
+    maxParticles: 250000
+  });
+  this.particleSystem.position.z = -5.1;
+  this.particleSystemOptions = {
+    position: new THREE.Vector3(),
+    positionRandomness: .3,
+    velocity: new THREE.Vector3(),
+    velocityRandomness: 3,
+    color: 0xaa88ff,
+    colorRandomness: .2,
+    turbulence: 0,
+    lifetime: 2,
+    size: 10,
+    sizeRandomness: 1
+  };
+  this.particleSystemSpawnRate = 100;
+  this.tick = 0;
 };
 
 LightRay.MAX_POINTS = 500;
@@ -40,4 +59,17 @@ LightRay.prototype.updateRayCollisions = function (newRayCollisions) {
 LightRay.prototype.update = function (dt) {
   // Move ray at constant velocity
   this.ray.origin.add(this.velocity.clone().multiplyScalar(dt));
+
+  if (this.rayCollisions.length > 0) {
+    // Move particle spawn point to last ray collision
+    this.particleSystemOptions.position.copy(this.rayCollisions[this.rayCollisions.length - 1].point);
+
+    // Spawn particles
+    for (let x = 0; x < this.particleSystemSpawnRate * dt; x++) {
+      this.particleSystem.spawnParticle(this.particleSystemOptions);
+    }
+  }
+
+  this.tick += dt;
+  this.particleSystem.update(this.tick);
 };

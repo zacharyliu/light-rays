@@ -13,7 +13,7 @@ var GameState = function () {
   this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(GameState.WIDTH/2, GameState.HEIGHT, 0), new THREE.Vector3(-1, -2, 0).normalize()), this.velocity);
 
   this.scene = new THREE.Scene();
-  this.scene.add(this.lightRay.body);
+  this.scene.add(this.lightRay.body, this.lightRay.particleSystem);
 
   this.effectsScene = new THREE.Scene();
   this.effectsScene.add(this.lightRay.body.clone());

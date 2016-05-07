@@ -34,6 +34,7 @@ Collider.prototype.collide = function (lightRay, objects) {
       entity.intersections.push(intersection);
 
       let collisionBehavior = entity.handleCollision(intersection);
+      intersection.behavior = collisionBehavior;
       if (collisionBehavior === Collider.CollisionBehavior.PASS) {
         continue;
       } else if (collisionBehavior === Collider.CollisionBehavior.ABSORB) {

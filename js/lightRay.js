@@ -15,7 +15,8 @@ var LightRay = function (ray, velocity) {
   }));
 
   this.particleSystem = new THREE.GPUParticleSystem({
-    maxParticles: 250000
+    maxParticles: 250000,
+    velocityScale: 10.
   });
   this.particleSystem.position.z = -5.1;
   this.particleSystemOptions = {
@@ -23,12 +24,13 @@ var LightRay = function (ray, velocity) {
     positionRandomness: .3,
     velocity: new THREE.Vector3(),
     velocityRandomness: 3,
-    color: 0xaa88ff,
+    color: 0xffff00,
     colorRandomness: .2,
-    turbulence: 0,
+    turbulence: .2,
     lifetime: 2,
     size: 10,
-    sizeRandomness: 1
+    sizeRandomness: 1,
+    wind: new THREE.Vector3(0, 5, 0)
   };
   this.particleSystemSpawnRate = 100;
   this.tick = 0;
@@ -60,9 +62,11 @@ LightRay.prototype.update = function (dt) {
   // Move ray at constant velocity
   this.ray.origin.add(this.velocity.clone().multiplyScalar(dt));
 
-  if (this.rayCollisions.length > 0) {
-    // Move particle spawn point to last ray collision
-    this.particleSystemOptions.position.copy(this.rayCollisions[this.rayCollisions.length - 1].point);
+  for (let collision of this.rayCollisions) {
+    if (collision.behavior == Collider.CollisionBehavior.PASS) continue;
+
+    // Move particle spawn point to ray collision
+    this.particleSystemOptions.position.copy(collision.point);
 
     // Spawn particles
     for (let x = 0; x < this.particleSystemSpawnRate * dt; x++) {

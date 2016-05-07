@@ -53,7 +53,11 @@ Mirror.prototype.update = function (dt) {
 
 Mirror.prototype.handleCollision = function (intersection) {
   if (this.state == Mirror.State.GHOST) return Collider.CollisionBehavior.PASS;
-  return Collider.CollisionBehavior.REFLECT;
+
+  let normal = intersection.face.normal;
+  if (normal.x == 0 && normal.y == 0 && (normal.z == 1 || normal.z == -1)) return Collider.CollisionBehavior.REFLECT;
+
+  return Collider.CollisionBehavior.PASS;
 };
 
 Mirror.prototype.reflectIntersection = function (ray, intersection) {

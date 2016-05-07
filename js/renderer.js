@@ -18,12 +18,22 @@ var Renderer = function (canvas) {
 };
 
 Renderer.prototype.initScene = function (scene) {
+  this.scene = scene;
+
+  this.composer = new THREE.EffectComposer( this.renderer );
+
+  this.composer.addPass( new THREE.RenderPass( this.scene, this.camera ) );
+
+  this.fxaa = new THREE.ShaderPass(THREE.FXAAShader);
+  this.fxaa.renderToScreen = true;
+  this.composer.addPass(this.fxaa);
+
   scene.add(this.camera);
 };
 
-Renderer.prototype.render = function (scene) {
+Renderer.prototype.render = function () {
   this.cameraControls && this.cameraControls.update();
-  this.renderer.render(scene, this.camera);
+  this.composer.render(this.scene, this.camera);
   this.stats.update();
 };
 
@@ -39,4 +49,7 @@ Renderer.prototype.resize = function (width, height) {
 
   this.renderer.setPixelRatio(window.devicePixelRatio);
   this.renderer.setSize(width, height);
+
+  this.composer.setSize(width, height);
+  this.fxaa.uniforms.resolution.value.set(1 / width, 1 / height);
 };

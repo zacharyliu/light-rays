@@ -51,8 +51,9 @@ Mirror.prototype.update = function (dt) {
   if (newState != null) this.setState(newState);
 };
 
-Mirror.prototype.shouldReflectIntersection = function () {
-  return this.state != Mirror.State.GHOST;
+Mirror.prototype.handleCollision = function (intersection) {
+  if (this.state == Mirror.State.GHOST) return Collider.CollisionBehavior.PASS;
+  return Collider.CollisionBehavior.REFLECT;
 };
 
 Mirror.prototype.reflectIntersection = function (ray, intersection) {

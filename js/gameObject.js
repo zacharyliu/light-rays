@@ -33,9 +33,8 @@ GameObject.prototype.update = function (dt) {
   this.body.position.add(this.velocity.clone().multiplyScalar(dt));
 };
 
-GameObject.prototype.testIntersect = function (ray) {
-  if (!this.body) return Math.POSITIVE_INFINITY;
-  // TODO
+GameObject.prototype.handleCollision = function (intersection) {
+  return Collider.CollisionBehavior.PASS;
 };
 
 GameObject.createBox = function (width, height, position) {

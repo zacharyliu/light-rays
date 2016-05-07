@@ -2,6 +2,12 @@ var Collider = function () {
   this.raycaster = new THREE.Raycaster();
 };
 
+Collider.CollisionBehavior = Object.freeze({
+  PASS: 0,
+  ABSORB: 1,
+  REFLECT: 2
+});
+
 Collider.prototype.collide = function (lightRay, objects) {
   var ray = lightRay.ray;
   var intersections = [];
@@ -20,20 +26,27 @@ Collider.prototype.collide = function (lightRay, objects) {
     }));
     for (var intersection of result) {
       var entity = intersection.object.userData.entity;
-      // if (!entity.shouldCollide) continue;
-      
+
       intersection.ray = ray;
       intersections.push(intersection);
-      
+
       entity.isColliding = true;
       entity.intersections.push(intersection);
-      
-      var reflectIntersection = entity.reflectIntersection;
-      var newRay;
-      if (reflectIntersection && (newRay = reflectIntersection(ray, intersection))) {
-        ray = newRay;
-        doRaycast = true;
+
+      let collisionBehavior = entity.handleCollision(intersection);
+      if (collisionBehavior === Collider.CollisionBehavior.PASS) {
+        continue;
+      } else if (collisionBehavior === Collider.CollisionBehavior.ABSORB) {
         break;
+      } else if (collisionBehavior === Collider.CollisionBehavior.REFLECT) {
+        let newRay = entity.reflectIntersection(ray, intersection);
+        if (newRay) {
+          ray = newRay;
+          doRaycast = true;
+          break;
+        }
+      } else {
+        throw new Error("Entity is missing a valid collision behavior");
       }
     }
   }

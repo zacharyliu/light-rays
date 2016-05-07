@@ -10,7 +10,8 @@ var LightRay = function (ray, velocity) {
   this.bodyGeometry.addAttribute('position', new THREE.BufferAttribute(this.positions, 3));
   this.bodyGeometry.setDrawRange(0, 0);
   this.body = new THREE.Line(this.bodyGeometry, new THREE.LineBasicMaterial({
-    color: 0xffff00
+    color: 0xffff00,
+    linewidth: 3 // TODO: linewidth doesn't work on Windows
   }));
 };
 

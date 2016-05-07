@@ -15,6 +15,9 @@ var GameState = function () {
   this.scene = new THREE.Scene();
   this.scene.add(this.lightRay.body);
 
+  this.effectsScene = new THREE.Scene();
+  this.effectsScene.add(this.lightRay.body.clone());
+
   this.walls = [
     new Mirror({
       length: GameState.HEIGHT * 2,

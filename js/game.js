@@ -11,7 +11,7 @@ var Game = function (mainContainer) {
   this.gameState = new GameState();
 
   this.renderer = new Renderer(this.canvas);
-  this.renderer.initScene(this.gameState.scene);
+  this.renderer.initScene(this.gameState.scene, this.gameState.effectsScene);
 
   window.GameInput = GameInputFactory(this.renderer);
 

@@ -101,6 +101,7 @@ THREE.GPUParticleSystem = function(options) {
 
       'attribute vec4 particlePositionsStartTime;',
       'attribute vec4 particleVelColSizeLife;',
+      'attribute vec3 particleWind;',
 
       'varying vec4 vColor;',
       'varying float lifeLeft;',
@@ -123,9 +124,9 @@ THREE.GPUParticleSystem = function(options) {
 
       'gl_PointSize = ( uScale * particleVelColSizeLife.z ) * lifeLeft;',
 
-      'velocity.x = ( velocity.x - .5 ) * 3.;',
-      'velocity.y = ( velocity.y - .5 ) * 3.;',
-      'velocity.z = ( velocity.z - .5 ) * 3.;',
+      'velocity.x = particleWind.x + ( velocity.x - .5 ) * 3.;',
+      'velocity.y = particleWind.y + ( velocity.y - .5 ) * 3.;',
+      'velocity.z = particleWind.z + ( velocity.z - .5 ) * 3.;',
 
       'newPosition = particlePositionsStartTime.xyz + ( velocity * 10. ) * ( uTime - particlePositionsStartTime.a );',
 
@@ -345,6 +346,7 @@ THREE.GPUParticleContainer = function(maxParticles, particleSystem) {
   self.particleVertices = new Float32Array(self.PARTICLE_COUNT * 3); // position
   self.particlePositionsStartTime = new Float32Array(self.PARTICLE_COUNT * 4); // position
   self.particleVelColSizeLife = new Float32Array(self.PARTICLE_COUNT * 4);
+  self.particleWind = new Float32Array(self.PARTICLE_COUNT * 3);
 
   for (var i = 0; i < self.PARTICLE_COUNT; i++) {
     self.particlePositionsStartTime[i * 4 + 0] = 100; //x
@@ -365,6 +367,7 @@ THREE.GPUParticleContainer = function(maxParticles, particleSystem) {
   self.particleShaderGeo.addAttribute('position', new THREE.BufferAttribute(self.particleVertices, 3));
   self.particleShaderGeo.addAttribute('particlePositionsStartTime', new THREE.BufferAttribute(self.particlePositionsStartTime, 4).setDynamic(true));
   self.particleShaderGeo.addAttribute('particleVelColSizeLife', new THREE.BufferAttribute(self.particleVelColSizeLife, 4).setDynamic(true));
+  self.particleShaderGeo.addAttribute('particleWind', new THREE.BufferAttribute(self.particleWind, 3).setDynamic(true));
 
   self.posStart = self.particleShaderGeo.getAttribute('particlePositionsStartTime')
   self.velCol = self.particleShaderGeo.getAttribute('particleVelColSizeLife');
@@ -388,6 +391,7 @@ THREE.GPUParticleContainer = function(maxParticles, particleSystem) {
     lifetime = 0.,
     size = 0.,
     sizeRandomness = 0.,
+    wind = new THREE.Vector3(),
     i;
 
   var maxVel = 2;
@@ -411,10 +415,15 @@ THREE.GPUParticleContainer = function(maxParticles, particleSystem) {
     size = options.size !== undefined ? options.size : 10;
     sizeRandomness = options.sizeRandomness !== undefined ? options.sizeRandomness : 0.0,
       smoothPosition = options.smoothPosition !== undefined ? options.smoothPosition : false;
+    wind = options.wind !== undefined ? wind.copy(options.wind) : wind.set(0., 0., 0.);
 
     if (self.DPR !== undefined) size *= self.DPR;
 
     i = self.PARTICLE_CURSOR;
+
+    self.particleWind[i * 3 + 0] = wind.x;
+    self.particleWind[i * 3 + 1] = wind.y;
+    self.particleWind[i * 3 + 2] = wind.z;
 
     self.posStart.array[i * 4 + 0] = position.x + ((particleSystem.random()) * positionRandomness); // - ( velocity.x * particleSystem.random() ); //x
     self.posStart.array[i * 4 + 1] = position.y + ((particleSystem.random()) * positionRandomness); // - ( velocity.y * particleSystem.random() ); //y
@@ -493,6 +502,7 @@ THREE.GPUParticleContainer = function(maxParticles, particleSystem) {
 
       self.posStart.needsUpdate = true;
       self.velCol.needsUpdate = true;
+      self.particleShaderGeo.getAttribute('particleWind').needsUpdate = true;
 
       self.offset = 0;
       self.count = 0;

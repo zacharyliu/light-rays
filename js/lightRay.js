@@ -59,7 +59,7 @@ LightRay.prototype.updateRayCollisions = function (newRayCollisions) {
     this.body.add(obj);
 
     prev = e.point;
-    currentColor = e.color;
+    if (e.hasOwnProperty('colorOut')) currentColor = e.colorOut;
   }
 };
 

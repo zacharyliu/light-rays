@@ -52,7 +52,8 @@ Collider.prototype.collide = function (lightRay, objects) {
       } else if (collisionBehavior === Collider.CollisionBehavior.CHANGE_COLOR) {
         let newColor = entity.colorIntersection(intersection);
         if (newColor) {
-          color = newColor;
+          // TODO: make color storing logic more consistent
+          intersection.colorOut = color = newColor;
           continue;
         } else {
           throw new Error("Missing new color for CHANGE_COLOR behavior");

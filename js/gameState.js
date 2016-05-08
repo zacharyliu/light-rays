@@ -114,7 +114,7 @@ GameState.prototype.update = function (dt) {
   this.timeSinceLastObstacle += dt;
   if (this.timeSinceLastObstacle > 2) {
     this.timeSinceLastObstacle = 0;
-    let obstacle = new Obstacle({
+    let obstacle = new FilterObstacle({
       width: 100,
       height: 10,
       position: new THREE.Vector3(Math.random() * GameState.WIDTH, 0, 0),
@@ -161,6 +161,7 @@ GameState.prototype.update = function (dt) {
   if (this.floor.isColliding) {
     let intersection = this.floor.intersections[0];
     this.lightRay.ray = intersection.ray;
+    this.lightRay.color = intersection.color;
   } else {
     // TODO: game over state - light ray left the scene
   }

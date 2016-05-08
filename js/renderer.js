@@ -75,7 +75,8 @@ Renderer.prototype.resize = function (width, height) {
   // this.camera.position.x = width / 2;
   // this.camera.position.y = height / 2;
 
-  this.renderer.setPixelRatio(window.devicePixelRatio);
+  // FIXME: THREE.EffectsComposer is incompatible with pixel ratio
+  // this.renderer.setPixelRatio(window.devicePixelRatio);
   this.renderer.setSize(width, height);
 
   this.composer.setSize(width, height);

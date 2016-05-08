@@ -73,9 +73,24 @@ LightRay.prototype.update = function (dt) {
     // Move particle spawn point to ray collision
     this.particleSystemOptions.position.copy(collision.point);
 
+    // Set particle color
+    this.particleSystemOptions.color = collision.color;
+
     // Spawn particles
-    for (let x = 0; x < this.particleSystemSpawnRate * dt; x++) {
-      this.particleSystem.spawnParticle(this.particleSystemOptions);
+    let count = this.particleSystemSpawnRate * dt;
+    if (collision.hasOwnProperty("colorOut")) {
+      // If color changed, then spawn half of each color
+      for (let x = 0; x < count / 2; x++) {
+        this.particleSystem.spawnParticle(this.particleSystemOptions);
+      }
+      this.particleSystemOptions.color = collision.colorOut;
+      for (let x = 0; x < count / 2; x++) {
+        this.particleSystem.spawnParticle(this.particleSystemOptions);
+      }
+    } else {
+      for (let x = 0; x < count; x++) {
+        this.particleSystem.spawnParticle(this.particleSystemOptions);
+      }
     }
   }
 

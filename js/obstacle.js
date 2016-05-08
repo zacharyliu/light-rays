@@ -11,4 +11,6 @@ var Obstacle = function (opts) {
 
 Obstacle.prototype = Object.create(GameObject.prototype);
 
-Obstacle.prototype.handleCollision = () => Collider.CollisionBehavior.ABSORB;
+Obstacle.prototype.handleCollision = function (intersection) {
+  return (intersection.color == this.color) ? Collider.CollisionBehavior.PASS : Collider.CollisionBehavior.ABSORB;
+};

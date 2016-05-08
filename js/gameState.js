@@ -112,14 +112,30 @@ GameState.prototype.update = function (dt) {
   
   // Spawn obstacles
   this.timeSinceLastObstacle += dt;
+  // TODO: store possible colors in some constant variable
+  // TODO: add more possible colors
+  let colors = [0xff0000, 0x00ff00, 0x0000ff];
   if (this.timeSinceLastObstacle > 2) {
     this.timeSinceLastObstacle = 0;
-    let obstacle = new FilterObstacle({
-      width: 100,
-      height: 10,
-      position: new THREE.Vector3(Math.random() * GameState.WIDTH, 0, 0),
-      velocity: this.velocity
-    });
+    let obstacle;
+    let position = new THREE.Vector3(Math.random() * GameState.WIDTH, 0, 0);
+    let color = colors[Math.floor(colors.length * Math.random())];
+    if (Math.random() < 0.5) {
+      obstacle = new FilterObstacle({
+        radius: 15,
+        position: position,
+        velocity: this.velocity,
+        color: color
+      });
+    } else {
+      obstacle = new Obstacle({
+        width: 100,
+        height: 10,
+        position: position,
+        velocity: this.velocity,
+        color: color
+      });
+    }
     this.gameObjects.push(obstacle);
     this.scene.add(obstacle.body);
   }

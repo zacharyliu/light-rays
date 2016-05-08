@@ -26,7 +26,7 @@ Mirror.prototype = Object.create(GameObject.prototype);
 Mirror.prototype.update = function (dt) {
   GameObject.prototype.update.call(this, dt);
   
-  if (this.state == Mirror.State.SELECTED) this.body.rotation.z = this.initialZAngle + new THREE.Vector2(1, -1).dot(GameInput.getMousePos().clone().sub(this.initialMousePos)) / 30;
+  if (this.state == Mirror.State.SELECTED) this.body.rotation.z = this.initialZAngle + new THREE.Vector2(1, -1).dot(GameInput.getMousePos().clone().sub(this.initialMousePos)) / 70;
 
   let newState;
   switch (this.state) {

@@ -53,11 +53,11 @@ GameState.HEIGHT = 480;
 GameState.BOUNDING_BOX = new THREE.Box3(new THREE.Vector3(0, 0, -1000), new THREE.Vector3(GameState.WIDTH, GameState.HEIGHT, 1000));
 
 GameState.prototype._initLights = function () {
-  var light1 = new THREE.AmbientLight(Math.random() * 0xffffff);
+  var light1 = new THREE.AmbientLight(0.3 * 0xffffff);
   this.scene.add(light1);
 
-  var light2 = new THREE.DirectionalLight(Math.random() * 0xffffff);
-  light2.position.set(Math.random(), Math.random(), Math.random()).normalize();
+  var light2 = new THREE.PointLight(0xffffff);
+  light2.position.set(GameState.WIDTH * 0.7, GameState.HEIGHT * 0.2, -500);
   this.scene.add(light2);
 };
 

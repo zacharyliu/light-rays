@@ -36,19 +36,16 @@ LightRay.prototype.updateRayCollisions = function (newRayCollisions) {
 
   // FIXME: this approach is inefficient due to constant creation/deletion of planes
 
-  // Remove all children
-  for (let i = this.body.children.length - 1; i >=0; i--) {
-    this.body.remove(this.body.children[i]);
-  }
-
   // Add lines (as planes) between points
   let prev = this.ray.origin;
   let currentColor = this.color;
-  for (var e of this.rayCollisions) {
+  let count = Math.min(this.rayCollisions.length, 500);
+  for (let i = 0; i < count; i++) {
+    let e = this.rayCollisions[i];
     /** @var {THREE.Vector3} Vector from previous point to current point */
     let vector = new THREE.Vector3().subVectors(e.point, prev);
     let geometry = new THREE.PlaneGeometry(vector.length(), 2);
-    let obj = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: currentColor})); // TODO: variable color
+    let obj = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: currentColor}));
     /** @var {Number} Angle of rotation from +x axis */
     let theta = Math.atan2(vector.y, vector.x);
 
@@ -56,11 +53,14 @@ LightRay.prototype.updateRayCollisions = function (newRayCollisions) {
     obj.rotation.x = Math.PI;
     obj.rotation.z = -theta; // Negative rotation since view is reversed
 
-    this.body.add(obj);
+    this.body.children[i] = obj;
 
     prev = e.point;
     if (e.hasOwnProperty('colorOut')) currentColor = e.colorOut;
   }
+
+  // Remove remaining elements
+  this.body.children.splice(count);
 };
 
 LightRay.prototype.update = function (dt) {

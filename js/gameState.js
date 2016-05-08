@@ -18,6 +18,10 @@ var GameState = function () {
   this.effectsScene = new THREE.Scene();
   // Add light ray as child without removing from main scene
   this.effectsScene.children.push(this.lightRay.body);
+  let gameObjectsWrapper = new THREE.Object3D();
+  gameObjectsWrapper.children = this.gameObjects;
+  this.effectsScene.children.push(gameObjectsWrapper);
+  this.effectsScene.add(new THREE.AmbientLight(0.1 * 0xffffff));
 
   this.walls = [
     new Mirror({
@@ -185,7 +189,7 @@ GameState.prototype.update = function (dt) {
 
 // Reset game to original state
 GameState.prototype.reset = function () {
+  // TODO: complete reset function
   // this.lightRay = 
-  this.gameObjects = [];
-  this.rayCollisions = [];
+  this.gameObjects.splice(0);
 };

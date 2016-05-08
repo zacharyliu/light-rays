@@ -5,11 +5,13 @@ var Collider = function () {
 Collider.CollisionBehavior = Object.freeze({
   PASS: 0,
   ABSORB: 1,
-  REFLECT: 2
+  REFLECT: 2,
+  CHANGE_COLOR: 3
 });
 
 Collider.prototype.collide = function (lightRay, objects) {
   var ray = lightRay.ray;
+  var color = lightRay.color;
   var intersections = [];
 
   var doRaycast = true;
@@ -28,6 +30,7 @@ Collider.prototype.collide = function (lightRay, objects) {
       var entity = intersection.object.userData.entity;
 
       intersection.ray = ray;
+      intersection.color = color;
       intersections.push(intersection);
 
       entity.isColliding = true;
@@ -45,6 +48,14 @@ Collider.prototype.collide = function (lightRay, objects) {
           ray = newRay;
           doRaycast = true;
           break;
+        }
+      } else if (collisionBehavior === Collider.CollisionBehavior.CHANGE_COLOR) {
+        let newColor = entity.colorIntersection(intersection);
+        if (newColor) {
+          color = newColor;
+          continue;
+        } else {
+          throw new Error("Missing new color for CHANGE_COLOR behavior");
         }
       } else {
         throw new Error("Entity is missing a valid collision behavior");

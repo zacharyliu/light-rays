@@ -1,7 +1,8 @@
-var LightRay = function (ray, velocity) {
+var LightRay = function (ray, velocity, color) {
   this.ray = ray;
   this.rayCollisions = [];
   this.velocity = velocity;
+  this.color = color || 0xffff00;
 
   /** @var {THREE.Object3D} Wrapper object for light ray segments */
   this.body = new THREE.Object3D();
@@ -42,11 +43,12 @@ LightRay.prototype.updateRayCollisions = function (newRayCollisions) {
 
   // Add lines (as planes) between points
   let prev = this.ray.origin;
+  let currentColor = this.color;
   for (var e of this.rayCollisions) {
     /** @var {THREE.Vector3} Vector from previous point to current point */
     let vector = new THREE.Vector3().subVectors(e.point, prev);
     let geometry = new THREE.PlaneGeometry(vector.length(), 2);
-    let obj = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xffff00})); // TODO: variable color
+    let obj = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: currentColor})); // TODO: variable color
     /** @var {Number} Angle of rotation from +x axis */
     let theta = Math.atan2(vector.y, vector.x);
 
@@ -57,6 +59,7 @@ LightRay.prototype.updateRayCollisions = function (newRayCollisions) {
     this.body.add(obj);
 
     prev = e.point;
+    currentColor = e.color;
   }
 };
 

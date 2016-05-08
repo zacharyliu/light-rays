@@ -16,7 +16,8 @@ var GameState = function () {
   this.scene.add(this.lightRay.body, this.lightRay.particleSystem);
 
   this.effectsScene = new THREE.Scene();
-  this.effectsScene.add(this.lightRay.body.clone());
+  // Add light ray as child without removing from main scene
+  this.effectsScene.children.push(this.lightRay.body);
 
   this.walls = [
     new Mirror({

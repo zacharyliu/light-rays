@@ -3,16 +3,8 @@ var LightRay = function (ray, velocity) {
   this.rayCollisions = [];
   this.velocity = velocity;
 
-  // Dynamically editable line
-  // http://stackoverflow.com/a/31411794/133211
-  this.bodyGeometry = new THREE.BufferGeometry();
-  this.positions = new Float32Array(LightRay.MAX_POINTS * 3);
-  this.bodyGeometry.addAttribute('position', new THREE.BufferAttribute(this.positions, 3));
-  this.bodyGeometry.setDrawRange(0, 0);
-  this.body = new THREE.Line(this.bodyGeometry, new THREE.LineBasicMaterial({
-    color: 0xffff00,
-    linewidth: 3 // TODO: linewidth doesn't work on Windows
-  }));
+  /** @var {THREE.Object3D} Wrapper object for light ray segments */
+  this.body = new THREE.Object3D();
 
   this.particleSystem = new THREE.GPUParticleSystem({
     maxParticles: 250000,
@@ -41,21 +33,31 @@ LightRay.MAX_POINTS = 500;
 LightRay.prototype.updateRayCollisions = function (newRayCollisions) {
   this.rayCollisions = newRayCollisions;
 
-  // Need to update initial point
-  this.positions[0] = this.ray.origin.x;
-  this.positions[1] = this.ray.origin.y;
-  this.positions[2] = this.ray.origin.z;
+  // FIXME: this approach is inefficient due to constant creation/deletion of planes
 
-  var index = 3;
-  for (var e of this.rayCollisions) {
-    this.positions[index++] = e.point.x;
-    this.positions[index++] = e.point.y;
-    this.positions[index++] = e.point.z;
-
-    if (index >= LightRay.MAX_POINTS * 3) break;
+  // Remove all children
+  for (let i = this.body.children.length - 1; i >=0; i--) {
+    this.body.remove(this.body.children[i]);
   }
-  this.bodyGeometry.attributes.position.needsUpdate = true;
-  this.bodyGeometry.setDrawRange(0, this.rayCollisions.length + 1);
+
+  // Add lines (as planes) between points
+  let prev = this.ray.origin;
+  for (var e of this.rayCollisions) {
+    /** @var {THREE.Vector3} Vector from previous point to current point */
+    let vector = new THREE.Vector3().subVectors(e.point, prev);
+    let geometry = new THREE.PlaneGeometry(vector.length(), 2);
+    let obj = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xffff00})); // TODO: variable color
+    /** @var {Number} Angle of rotation from +x axis */
+    let theta = Math.atan2(vector.y, vector.x);
+
+    obj.position.copy(vector).multiplyScalar(1 / 2).add(prev); // Position at middle between points
+    obj.rotation.x = Math.PI;
+    obj.rotation.z = -theta; // Negative rotation since view is reversed
+
+    this.body.add(obj);
+
+    prev = e.point;
+  }
 };
 
 LightRay.prototype.update = function (dt) {

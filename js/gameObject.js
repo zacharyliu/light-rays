@@ -1,10 +1,13 @@
 var GameObject = function (body, opts) {
+  THREE.Object3D.call(this);
+
   opts = opts || {};
   this.velocity = opts.velocity || new THREE.Vector3();
 
   /** @var {THREE.Object3D} */
   this.body = body;
   this.body.userData.entity = this;
+  this.children.push(this.body);
 
   this.mouseOverBody = opts.mouseOverBody || body;
   if (this.mouseOverBody != this.body) {
@@ -26,6 +29,8 @@ var GameObject = function (body, opts) {
 
   this.isMouseOver = false;
 };
+
+GameObject.prototype = Object.create(THREE.Object3D.prototype);
 
 GameObject.prototype.update = function (dt) {
   this.isColliding = false;

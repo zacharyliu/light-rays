@@ -29,8 +29,6 @@ var LightRay = function (ray, velocity, color) {
   this.tick = 0;
 };
 
-LightRay.MAX_POINTS = 500;
-
 LightRay.prototype.updateRayCollisions = function (newRayCollisions) {
   this.rayCollisions = newRayCollisions;
 
@@ -39,7 +37,7 @@ LightRay.prototype.updateRayCollisions = function (newRayCollisions) {
   // Add lines (as planes) between points
   let prev = this.ray.origin;
   let currentColor = this.color;
-  let count = Math.min(this.rayCollisions.length, 500);
+  let count = Math.min(this.rayCollisions.length, Collider.MAX_COLLISIONS);
   for (let i = 0; i < count; i++) {
     let e = this.rayCollisions[i];
     /** @var {THREE.Vector3} Vector from previous point to current point */

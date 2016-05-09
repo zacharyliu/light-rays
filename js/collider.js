@@ -2,6 +2,8 @@ var Collider = function () {
   this.raycaster = new THREE.Raycaster();
 };
 
+Collider.MAX_COLLISIONS = 50;
+
 Collider.CollisionBehavior = Object.freeze({
   PASS: 0,
   ABSORB: 1,
@@ -16,8 +18,8 @@ Collider.prototype.collide = function (lightRay, objects) {
 
   var doRaycast = true;
   while (doRaycast) {
-    if (intersections.length > 500) {
-      console.warn("Exceeded 500 intersections");
+    if (intersections.length > Collider.MAX_COLLISIONS) {
+      console.warn("Exceeded " + Collider.MAX_COLLISIONS + " intersections");
       break;
     }
 

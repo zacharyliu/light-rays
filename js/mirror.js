@@ -26,7 +26,12 @@ Mirror.prototype = Object.create(GameObject.prototype);
 Mirror.prototype.update = function (dt) {
   GameObject.prototype.update.call(this, dt);
 
-  if (this.state == Mirror.State.SELECTED) this.body.lookAt(GameInput.getMousePos().clone().add(this.body.position).sub(this.initialPosition));
+  if (this.state == Mirror.State.SELECTED) {
+    this.body.lookAt(GameInput.getMousePos().clone().add(this.body.position).sub(this.initialPosition));
+    var mouseDir = GameInput.getMousePos().clone().sub(this.initialPosition).normalize();
+    var angle = Math.atan2(mouseDir.y, mouseDir.x);
+    this.pointer.rotation.z = angle - Math.PI/2;
+  }
 
   let newState;
   switch (this.state) {
@@ -96,9 +101,17 @@ Mirror.prototype.setState = function (newState) {
     this.initialPoint = new THREE.Mesh(new THREE.SphereGeometry(2), new THREE.MeshLambertMaterial({color: 0xffffff}));
     this.initialPoint.position.copy(GameInput.getMousePos());
     this.add(this.initialPoint);
+
+    this.pointer = new THREE.Mesh(new THREE.CylinderGeometry(0, 5, 7, 4, 1), new THREE.MeshLambertMaterial({color: 0xffffff}));
+    this.pointer.position.copy(this.initialPoint.position);
+    this.pointer.geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 10, 0 ) );
+    this.add(this.pointer);
   } else {
     if (this.initialPoint) {
       this.remove(this.initialPoint);
+    }
+    if (this.pointer) {
+      this.remove(this.pointer);
     }
   }
 

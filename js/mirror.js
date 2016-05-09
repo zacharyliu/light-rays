@@ -27,7 +27,10 @@ Mirror.prototype.update = function (dt) {
   GameObject.prototype.update.call(this, dt);
 
   if (this.state == Mirror.State.SELECTED) {
-    this.body.lookAt(GameInput.getMousePos().clone().add(this.body.position).sub(this.initialPosition));
+    var mirrorLook = GameInput.getMousePos().clone().add(this.body.position).sub(this.initialPosition);
+    if (this.body.position.clone().sub(mirrorLook).length() > 0.1) {
+      this.body.lookAt(mirrorLook);
+    }
     var mouseDir = GameInput.getMousePos().clone().sub(this.initialPosition).normalize();
     var angle = Math.atan2(mouseDir.y, mouseDir.x);
     this.pointer.rotation.z = angle - Math.PI/2;

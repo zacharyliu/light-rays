@@ -5,6 +5,8 @@ var GameInputFactory = function (renderer) {
   var pressedKeys = {};
   var mousePos = new THREE.Vector3();
 
+  var gamePlaneRaycaster = new THREE.Raycaster();
+
   function setKey(event, status) {
     var code = event.keyCode;
     var key;
@@ -37,9 +39,18 @@ var GameInputFactory = function (renderer) {
   });
 
   ['mousemove', 'touchmove', 'touchstart'].forEach(type => canvas.addEventListener(type, function (e) {
-    // Scale position to game coordinate system
-    mousePos.x = e.offsetX / parseFloat(e.target.style.width) * GameState.WIDTH;
-    mousePos.y = e.offsetY / parseFloat(e.target.style.height) * GameState.HEIGHT;
+    // Scale position to NDC
+    let coords = new THREE.Vector2();
+    coords.x = e.offsetX / parseFloat(e.target.style.width) * 2 - 1;
+    coords.y = -(e.offsetY / parseFloat(e.target.style.height) * 2 - 1);
+
+    // Update raycaster
+    gamePlaneRaycaster.setFromCamera(coords, camera);
+
+    // Compute ray-plane intersection with ground plane (z=0)
+    let N = new THREE.Vector3(0, 0, -1);
+    let t = -gamePlaneRaycaster.ray.origin.dot(N) / gamePlaneRaycaster.ray.direction.dot(N);
+    mousePos.copy(gamePlaneRaycaster.ray.direction).multiplyScalar(t).add(gamePlaneRaycaster.ray.origin);
   }));
 
   ['mousedown', 'touchstart'].forEach(type => canvas.addEventListener(type, function(e) {

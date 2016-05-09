@@ -10,6 +10,8 @@ var Game = function (mainContainer) {
 
   this.gameState = new GameState();
 
+  this.ui = new UI(this.mainContainer, this.canvas);
+
   this.renderer = new Renderer(this.canvas);
   this.renderer.initScene(this.gameState.scene, this.gameState.effectsScene);
 
@@ -62,6 +64,7 @@ Game.prototype._resize = function () {
   var rule = "translate(" + offset[0] + "px, " + offset[1] + "px)";
   this.mainContainer.style.transform = rule;
   this.mainContainer.style.webkitTransform = rule;
+  this.mainContainer.style.width = size[0] + "px";
 
   this.renderer.resize(size[0], size[1]);
 };
@@ -88,6 +91,8 @@ Game.prototype.main = function () {
 
   this.gameState.update(dt);
   this.renderer.render(this.gameState.scene);
+  this.ui.addPoints(dt * 491);
+  this.ui.makeToast('Power Up');
 
   this.then = now;
   requestAnimationFrame(this.main.bind(this));

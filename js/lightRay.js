@@ -19,13 +19,14 @@ var LightRay = function (ray, velocity, color) {
     velocityRandomness: 3,
     color: 0xffff00,
     colorRandomness: .2,
-    turbulence: .2,
-    lifetime: 2,
-    size: 10,
+    turbulence: .1,
+    lifetime: 1.5,
+    size: 20,
     sizeRandomness: 1,
     wind: new THREE.Vector3(0, 5, 0)
   };
-  this.particleSystemSpawnRate = 100;
+  this.particleSystemSpawnRate = 30;
+  this.particleSystemMinDistance = 10;
   this.tick = 0;
 };
 
@@ -65,11 +66,18 @@ LightRay.prototype.update = function (dt) {
   // Move ray at constant velocity
   this.ray.origin.add(this.velocity.clone().multiplyScalar(dt));
 
+  // FIXME: hack to ensure that the first collision always spawns particles
+  this.particleSystemOptions.position = new THREE.Vector3(-this.particleSystemMinDistance + 1, 0, 0);
+
   for (let collision of this.rayCollisions) {
     if (collision.behavior == Collider.CollisionBehavior.PASS) continue;
 
+    let shouldSpawn = this.particleSystemOptions.position.distanceTo(collision.point) > this.particleSystemMinDistance;
+
     // Move particle spawn point to ray collision
     this.particleSystemOptions.position.copy(collision.point);
+
+    if (!shouldSpawn) continue;
 
     // Set particle color
     this.particleSystemOptions.color = collision.color;

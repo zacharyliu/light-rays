@@ -20,6 +20,7 @@ var GameState = function () {
   this.effectsScene.children.push(this.lightRay.body);
   let gameObjectsWrapper = new THREE.Object3D();
   gameObjectsWrapper.children = this.gameObjects;
+  this.scene.children.push(gameObjectsWrapper);
   this.effectsScene.children.push(gameObjectsWrapper);
   this.effectsScene.add(new THREE.AmbientLight(0.1 * 0xffffff));
 
@@ -81,7 +82,6 @@ GameState.prototype._placeMirror = function(x, y) {
   mirror.setState(Mirror.State.SELECTED);
   
   this.gameObjects.push(mirror);
-  this.scene.add(mirror.body);
   return true;
 }
 
@@ -141,7 +141,6 @@ GameState.prototype.update = function (dt) {
       });
     }
     this.gameObjects.push(obstacle);
-    this.scene.add(obstacle.body);
   }
 
   GameInput.updateRaycaster(this.mouseRaycaster);

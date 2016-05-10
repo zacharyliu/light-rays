@@ -31,3 +31,32 @@ p {
 canvas {
     display: block;
 }
+
+score {
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    left: 10px;
+    color: white;
+}
+
+toast {
+    position: absolute;
+    z-index: 1;
+    top: 33%;
+    left: 10px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 1.5em;
+}
+
+pause {
+    position: absolute;
+    z-index: 1;
+    top: 33%;
+    width: 100%;
+    text-align: center;
+    color: white;
+    visibility: hidden;
+}

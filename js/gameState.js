@@ -1,4 +1,5 @@
-var GameState = function () {
+var GameState = function (game) {
+  this.game = game;
   // mouse state
   this.mouseIsDown = false;
   this.mouseRaycaster  = new THREE.Raycaster();
@@ -85,16 +86,14 @@ GameState.prototype._placeMirror = function(x, y) {
   return true;
 }
 
-// Update game objects.
-// We'll use GameInput to detect which keys are down.
-// If you look at the bottom of index.html, we load GameInput
-// from js/input.js right before app.js
-GameState.prototype.update = function (dt) {
-  // You can pass any letter to `isDown`, in addition to DOWN,
-  // UP, LEFT, RIGHT, and SPACE:
-  // if(GameInput.isDown('a')) { ... }
-  var isDown = GameInput.isDown('MOUSE');
-  if (isDown) {
+GameState.prototype.handleInput = function() {
+  var spaceIsDownNow = GameInput.isDown('SPACE');
+  if (!spaceIsDownNow && this.spaceIsDown) {
+    this.game.togglePauseMenu();
+  }
+  this.spaceIsDown = spaceIsDownNow;
+  var mouseIsDownNow = GameInput.isDown('MOUSE');
+  if (mouseIsDownNow) {
     if (this.mouseIsDown) {
       // hold
     }
@@ -112,8 +111,14 @@ GameState.prototype.update = function (dt) {
       // no input
     }
   }
-  this.mouseIsDown = isDown;
-  
+  this.mouseIsDown = mouseIsDownNow;
+}
+
+// Update game objects.
+// We'll use GameInput to detect which keys are down.
+// If you look at the bottom of index.html, we load GameInput
+// from js/input.js right before app.js
+GameState.prototype.update = function (dt) {
   // Spawn obstacles
   this.timeSinceLastObstacle += dt;
   // TODO: store possible colors in some constant variable
@@ -183,6 +188,7 @@ GameState.prototype.update = function (dt) {
     this.lightRay.color = intersection.color;
   } else {
     // TODO: game over state - light ray left the scene
+    this.game.over();
   }
 };
 

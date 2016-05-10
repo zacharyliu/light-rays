@@ -8,9 +8,15 @@ var Game = function (mainContainer) {
   this.initialCanvasHeight = this.canvas.height = GameState.HEIGHT;
   this.mainContainer.appendChild(this.canvas);
 
-  this.gameState = new GameState();
+  this.gameState = new GameState(this);
 
-  this.ui = new UI(this.mainContainer, this.canvas);
+  // TODO this is really init
+  this.lifecycle = this._STATE.STARTED;
+
+  this.ui = new UI(
+    this.mainContainer.querySelector('score'),
+    this.mainContainer.querySelector('toast'),
+    this.mainContainer.querySelector('pause'));
 
   this.renderer = new Renderer(this.canvas);
   this.renderer.initScene(this.gameState.scene, this.gameState.effectsScene);
@@ -38,6 +44,31 @@ var Game = function (mainContainer) {
   this.renderer.render(this.gameState.scene);
   this.main();
 };
+
+Game.prototype._STATE = {
+  INIT: 0,
+  STARTED: 1,
+  PAUSEMENU: 2,
+  OVER: 3,
+  // CUTSCENE1: 4,
+  // CINEMATIC1: 4
+}
+
+Game.prototype.over = function() {
+  this.ui.makeToast('U lose');
+  this.lifecycle = this._STATE.OVER;
+}
+
+Game.prototype.togglePauseMenu = function() {
+  if (this.lifecycle === this._STATE.PAUSEMENU) {
+    this.lifecycle = this._STATE.STARTED;
+    this.ui.togglePauseMenu(false);
+  }
+  else if (this.lifecycle === this._STATE.STARTED) {
+    this.lifecycle = this._STATE.PAUSEMENU;
+    this.ui.togglePauseMenu(true);
+  }
+}
 
 // based on: https://hacks.mozilla.org/2013/05/optimizing-your-javascript-game-for-firefox-os/
 Game.prototype._resize = function () {
@@ -86,13 +117,16 @@ Game.prototype.main = function () {
     return;
   }
 
+  this.gameState.handleInput();
+
   var now = Date.now();
   var dt = (now - this.then) / 1000.0;
 
-  this.gameState.update(dt);
-  this.renderer.render(this.gameState.scene);
-  this.ui.addPoints(dt * 491);
-  this.ui.makeToast('Power Up');
+  if (this.lifecycle === this._STATE.STARTED) {
+    this.gameState.update(dt);
+    this.renderer.render(this.gameState.scene);
+    this.ui.addPoints(dt * 491);
+  }
 
   this.then = now;
   requestAnimationFrame(this.main.bind(this));

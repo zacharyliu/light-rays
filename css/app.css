@@ -7,7 +7,7 @@ html, body {
 }
 
 body {
-    font-family: Helvetica, Arial, sans;
+    font-family: 'Quicksand', sans-serif;
     background: linear-gradient(0deg, #aaa, #ccc 30%, #fff);
     background-size: 100% 100%;
     background-repeat: none;
@@ -30,6 +30,35 @@ p {
 
 canvas {
     display: block;
+}
+
+button {
+    padding: 1em 3em;
+    font-size: 16px;
+    border-radius: 0;
+    background: transparent;
+    border: solid 1.5px #000000;
+    color: #000000;
+    text-transform: uppercase;
+    letter-spacing: 3.5px;
+    cursor: pointer;
+}
+
+intro {
+    position: absolute;
+    top: 30%;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    font-size: 4em;
+    font-weight: lighter;
+}
+
+#title span {
+    -webkit-transition: color 3s linear;
+    -moz-transition: color 3s linear;
+    -o-transition: color 3s linear;
+    transition: color 3s linear;
 }
 
 score {

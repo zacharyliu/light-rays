@@ -91,6 +91,7 @@ Game.prototype._handleInput = function() {
       }
       else if (this.lifecycle === this._STATE.OVER) {
         this.ui.makeToast('');
+        this.ui.resetPoints();
         this.canvas.style.opacity = 0;
         setTimeout(() => {
           this.canvas.style.opacity = 1;

@@ -6,6 +6,11 @@ var UI = function (score, toast, pause) {
   this.points = 0;
 };
 
+UI.prototype.resetPoints = function () {
+  this.points = 0;
+  this._updateScore();
+};
+
 UI.prototype.addPoints = function(n) {
   this.points += Math.floor(n);
   this._updateScore();

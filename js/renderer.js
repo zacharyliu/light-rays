@@ -8,9 +8,7 @@ var Renderer = function (canvas) {
   this.stats.domElement.style.bottom = '0px';
   document.body.appendChild(this.stats.domElement);
 
-  this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, preserveDrawingBuffer: true});
-  // TODO: add clear color as flat plane in scene
-  // this.renderer.setClearColor(0x444444);
+  this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, preserveDrawingBuffer: true, alpha: true});
 
   this.camera = new THREE.PerspectiveCamera(50, 1, 1, 10000);
   // this.camera = new THREE.OrthographicCamera(GameState.WIDTH / -2, GameState.WIDTH / 2, GameState.HEIGHT / 2, GameState.HEIGHT / -2, 1, 1000);
@@ -52,7 +50,7 @@ Renderer.prototype.createGradient = function(scene) {
 Renderer.prototype.initScene = function (scene, effectsScene) {
   this.scene = scene;
 
-  this.createGradient(scene);
+  // this.createGradient(scene);
 
   // multi-pass technique based on: https://stemkoski.github.io/Three.js/Selective-Glow.html
 

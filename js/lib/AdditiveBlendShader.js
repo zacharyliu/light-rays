@@ -36,7 +36,7 @@ THREE.AdditiveBlendShader = {
 
 			"vec4 texel1 = texture2D( tDiffuse1, vUv );",
 			"vec4 texel2 = texture2D( tDiffuse2, vUv );",
-			"gl_FragColor = texel1 + texel2;",
+			"gl_FragColor = vec4(texel1.xyz + texel2.xyz, texel1.w);",
 		"}"
 
 	].join("\n")

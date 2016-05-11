@@ -127,7 +127,7 @@ Game.prototype.main = function () {
   this.gameState.update(dt);
   this.renderer.render(this.gameState.scene);
 
-  if (this.lifecycle !== this._STATE.PAUSEMENU) {
+  if (this.lifecycle === this._STATE.STARTED) {
     this.ui.addPoints(dt * 491);
   }
 

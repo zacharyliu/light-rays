@@ -10,10 +10,9 @@ var Renderer = function (canvas) {
 
   this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, preserveDrawingBuffer: true, alpha: true});
 
-  this.camera = new THREE.PerspectiveCamera(50, 1, 1, 10000);
+  this.camera = new THREE.PerspectiveCamera(45, 1, 1, 10000);
   // this.camera = new THREE.OrthographicCamera(GameState.WIDTH / -2, GameState.WIDTH / 2, GameState.HEIGHT / 2, GameState.HEIGHT / -2, 1, 1000);
-  this.camera.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2 + 360, -520);
-  this.camera.rotation.set(Math.PI + 0.5, 0, 0);
+  this._setCameraAngle(0.5);
 
   this.camera2 = this.camera.clone();
   this.camera2.position = this.camera.position;
@@ -45,6 +44,14 @@ Renderer.prototype.createGradient = function(scene) {
   mesh.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2, 10);
   mesh.rotation.set(-Math.PI, 0, Math.PI/2);
   scene.add( mesh );
+};
+
+Renderer.prototype._setCameraAngle = function (theta) {
+  let fov = this.camera.fov / 180 * Math.PI;
+  let d = GameState.HEIGHT / (Math.tan(fov / 2 + theta) + Math.tan(fov / 2 - theta));
+  let h = d * Math.tan(Math.PI / 8 + theta);
+  this.camera.position.set(GameState.WIDTH / 2, h, -d);
+  this.camera.rotation.set(Math.PI + theta, 0, 0);
 };
 
 Renderer.prototype.initScene = function (scene, effectsScene) {

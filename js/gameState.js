@@ -17,6 +17,15 @@ var GameState = function (game) {
   this.scene = new THREE.Scene();
   this.scene.add(this.lightRay.body, this.lightRay.particleSystem);
 
+  let geometry = new Line([[0, 0], [1, 0], [1, 1], [0, 1]]);
+  let body = new THREE.Mesh(geometry, new THREE.ShaderMaterial(BasicShader({
+    side: THREE.DoubleSide,
+    thickness: 30
+  })));
+  // this.body = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), new THREE.MeshBasicMaterial());
+  body.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2, 0);
+  this.scene.add(body);
+
   this.effectsScene = new THREE.Scene();
 
   // Add light ray as child without removing from main scene

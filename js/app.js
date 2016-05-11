@@ -1,5 +1,8 @@
 window.onload = function() {
 
+    // Load three-line-2d library
+    window.Line = threeLine2d(THREE);
+
     // Create the canvas
     var mainContainer = document.querySelector('main');
     var game = new Game(mainContainer);

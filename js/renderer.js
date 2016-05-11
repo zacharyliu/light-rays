@@ -94,8 +94,8 @@ Renderer.prototype.initScene = function (scene, effectsScene) {
 
 Renderer.prototype.render = function () {
   this.cameraControls && this.cameraControls.update();
-  this.effectsComposer.render();
-  this.composer.render();
+  // this.effectsComposer.render();
+  this.renderer.render(this.scene, this.camera);
   this.stats.update();
 };
 

@@ -31,14 +31,18 @@ Generator.prototype._SCENES = [
       height: 10,
       position: new THREE.Vector3(GameState.WIDTH * 0.3, -5, 0),
       velocity: velocity,
-      color: 0x000000
+      color: Please.make_color({
+        greyscale: true,
+      })
     });
     let ob2 = new Obstacle({
       width: GameState.WIDTH * 0.6,
       height: 10,
       position: new THREE.Vector3(GameState.WIDTH * 0.7, -100, 0),
       velocity: velocity,
-      color: 0x000000
+      color: Please.make_color({
+        greyscale: true,
+      })
     });
     container.add(ob1);
     container.add(ob2);
@@ -59,7 +63,9 @@ Generator.prototype._SCENES = [
       height: 10,
       position: new THREE.Vector3(GameState.WIDTH * (order ? 0.75 : 0.25), -80, 0),
       velocity: velocity,
-      color: 0x000000
+      color: Please.make_color({
+        greyscale: true,
+      })
     });
     let fb = new FilterObstacle({
       radius: 15,

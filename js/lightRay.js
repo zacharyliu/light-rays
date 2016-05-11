@@ -103,3 +103,12 @@ LightRay.prototype.update = function (dt) {
   this.tick += dt;
   this.particleSystem.update(this.tick);
 };
+
+LightRay.prototype.getFinalColor = function () {
+  if (this.rayCollisions.length > 0) {
+    let final = this.rayCollisions[this.rayCollisions.length - 1];
+    if (final.hasOwnProperty("colorOut")) return final.colorOut;
+    return final.color;
+  }
+  return this.color;
+};

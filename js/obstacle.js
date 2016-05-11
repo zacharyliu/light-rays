@@ -4,7 +4,7 @@ var Obstacle = function (opts) {
   opts = opts || {};
   var geometry = new THREE.BoxGeometry( 10, opts.height || 10, opts.width || 10, 3, 3, 3 );
   this._modifier.modify(geometry);
-  this.color = opts.color || Math.random() * 0xffffff;
+  this.color = opts.color !== undefined ? opts.color : Math.random() * 0xffffff;
   var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: this.color } ) );
 
   GameObject.call(this, object, opts);

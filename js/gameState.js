@@ -51,8 +51,8 @@ var GameState = function (game) {
   this.scene.add(this.floor.body);
 
   this.collider = new Collider();
-  
-  this.timeSinceLastObstacle = Number.POSITIVE_INFINITY;
+
+  this.generator = new Generator(gameObjectsWrapper, this.velocity, this.lightRay);
 
   this._initLights();
 
@@ -63,7 +63,7 @@ GameState.WIDTH = 320;
 
 GameState.HEIGHT = 480;
 
-GameState.BOUNDING_BOX = new THREE.Box3(new THREE.Vector3(0, 0, -1000), new THREE.Vector3(GameState.WIDTH, GameState.HEIGHT, 1000));
+GameState.BOUNDING_BOX = new THREE.Box3(new THREE.Vector3(0, -GameState.HEIGHT, -1000), new THREE.Vector3(GameState.WIDTH, GameState.HEIGHT, 1000));
 
 GameState.prototype._initLights = function () {
   var light1 = new THREE.AmbientLight(0x111111);
@@ -99,33 +99,7 @@ GameState.prototype._placeMirror = function(x, y) {
 // from js/input.js right before app.js
 GameState.prototype.update = function (dt) {
   // Spawn obstacles
-  this.timeSinceLastObstacle += dt;
-  // TODO: store possible colors in some constant variable
-  // TODO: add more possible colors
-  let colors = [0xFF6B6B, 0x7CFF46, 0x4ECDC4];
-  if (this.timeSinceLastObstacle > 2) {
-    this.timeSinceLastObstacle = 0;
-    let obstacle;
-    let position = new THREE.Vector3(Math.random() * GameState.WIDTH, 0, 0);
-    let color = colors[Math.floor(colors.length * Math.random())];
-    if (Math.random() < 0.5) {
-      obstacle = new FilterObstacle({
-        radius: 15,
-        position: position,
-        velocity: this.velocity,
-        color: color
-      });
-    } else {
-      obstacle = new Obstacle({
-        width: 100,
-        height: 10,
-        position: position,
-        velocity: this.velocity,
-        color: color
-      });
-    }
-    this.gameObjects.push(obstacle);
-  }
+  this.generator.update(dt);
 
   GameInput.updateRaycaster(this.mouseRaycaster);
 

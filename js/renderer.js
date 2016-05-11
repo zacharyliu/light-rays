@@ -27,7 +27,7 @@ Renderer.prototype.createGradient = function(scene) {
   canvas.width = 128;
   canvas.height = 128;
   var context = canvas.getContext( '2d' );
-  var gradient = context.createLinearGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
+  var gradient = context.createLinearGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2);
   gradient.addColorStop( 0, '#EAECC6' );
   gradient.addColorStop( 1, '#2BC0E4' );
   context.fillStyle = gradient;
@@ -35,13 +35,13 @@ Renderer.prototype.createGradient = function(scene) {
   var shadowTexture = new THREE.Texture( canvas );
   shadowTexture.needsUpdate = true;
   var shadowMaterial = new THREE.MeshBasicMaterial( { map: shadowTexture } );
-  var shadowGeo = new THREE.PlaneGeometry( GameState.HEIGHT * 1.1, GameState.WIDTH * 1.1, 1, 1 );
+  var shadowGeo = new THREE.PlaneGeometry( GameState.HEIGHT * 1.5, GameState.WIDTH * 1.8, 1, 1 );
 
-  mesh = new THREE.Mesh( shadowGeo, shadowMaterial );
+  let mesh = new THREE.Mesh( shadowGeo, shadowMaterial );
   mesh.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2, 10);
   mesh.rotation.set(-Math.PI, 0, Math.PI/2);
   scene.add( mesh );
-}
+};
 
 Renderer.prototype.initScene = function (scene, effectsScene) {
   this.scene = scene;

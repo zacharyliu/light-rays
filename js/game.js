@@ -51,17 +51,22 @@ Game.prototype._STATE = {
 }
 
 Game.prototype.over = function() {
+  if (this.lifecycle !== this._STATE.STARTED) return;
+
   this.ui.makeToast('Game Over');
+  this.canvas.style.opacity = 0.1;
   this.lifecycle = this._STATE.OVER;
 }
 
 Game.prototype.togglePauseMenu = function() {
   if (this.lifecycle === this._STATE.PAUSEMENU) {
     this.lifecycle = this._STATE.STARTED;
+    this.canvas.style.opacity = 1;
     this.ui.togglePauseMenu(false);
   }
   else if (this.lifecycle === this._STATE.STARTED) {
     this.lifecycle = this._STATE.PAUSEMENU;
+    this.canvas.style.opacity = 0.1;
     this.ui.togglePauseMenu(true);
   }
 }
@@ -86,8 +91,12 @@ Game.prototype._handleInput = function() {
       }
       else if (this.lifecycle === this._STATE.OVER) {
         this.ui.makeToast('');
-        this.gameState.reset();
-        this.lifecycle = this._STATE.STARTED;
+        this.canvas.style.opacity = 0;
+        setTimeout(() => {
+          this.canvas.style.opacity = 1;
+          this.gameState.reset();
+          this.lifecycle = this._STATE.STARTED;
+        }, 200);
       }
     }
   }
@@ -124,10 +133,12 @@ Game.prototype.main = function () {
   var now = Date.now();
   var dt = (now - this.then) / 1000.0;
 
-  this.gameState.update(dt);
-  this.renderer.render(this.gameState.scene);
-
   if (this.lifecycle !== this._STATE.PAUSEMENU) {
+    this.gameState.update(dt);
+    this.renderer.render(this.gameState.scene);
+  }
+
+  if (this.lifecycle === this._STATE.STARTED) {
     this.ui.addPoints(dt * 491);
   }
 

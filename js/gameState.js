@@ -23,16 +23,18 @@ var GameState = function (game) {
   gameObjectsWrapper.children = this.gameObjects;
   this.scene.children.push(gameObjectsWrapper);
   this.effectsScene.children.push(gameObjectsWrapper);
-  this.effectsScene.add(new THREE.AmbientLight(0.1 * 0xffffff));
+  this.effectsScene.add(new THREE.AmbientLight(0x777777));
 
   this.walls = [
     new Mirror({
       length: GameState.HEIGHT * 2,
-      position: new THREE.Vector3(0, GameState.HEIGHT, 0)
+      position: new THREE.Vector3(0, GameState.HEIGHT, 0),
+      color: 0xffffff
     }),
     new Mirror({
       length: GameState.HEIGHT * 2,
-      position: new THREE.Vector3(GameState.WIDTH, GameState.HEIGHT, 0)
+      position: new THREE.Vector3(GameState.WIDTH, GameState.HEIGHT, 0),
+      color: 0xffffff
     })
   ];
   for (var wall of this.walls) this.scene.add(wall.body);
@@ -59,10 +61,10 @@ GameState.HEIGHT = 480;
 GameState.BOUNDING_BOX = new THREE.Box3(new THREE.Vector3(0, 0, -1000), new THREE.Vector3(GameState.WIDTH, GameState.HEIGHT, 1000));
 
 GameState.prototype._initLights = function () {
-  var light1 = new THREE.AmbientLight(0.3 * 0xffffff);
+  var light1 = new THREE.AmbientLight(0x111111);
   this.scene.add(light1);
 
-  var light2 = new THREE.PointLight(0xffffff);
+  var light2 = new THREE.PointLight(0x555555);
   light2.position.set(GameState.WIDTH * 0.7, GameState.HEIGHT * 0.2, -500);
   this.scene.add(light2);
 };
@@ -86,34 +88,6 @@ GameState.prototype._placeMirror = function(x, y) {
   return true;
 }
 
-GameState.prototype.handleInput = function() {
-  var spaceIsDownNow = GameInput.isDown('SPACE');
-  if (!spaceIsDownNow && this.spaceIsDown) {
-    this.game.togglePauseMenu();
-  }
-  this.spaceIsDown = spaceIsDownNow;
-  var mouseIsDownNow = GameInput.isDown('MOUSE');
-  if (mouseIsDownNow) {
-    if (this.mouseIsDown) {
-      // hold
-    }
-    else {
-      // down
-      var mousePos = GameInput.getMousePos();
-      if (!this.mouseOverObject) this._placeMirror(mousePos.x, mousePos.y);
-    }
-  }
-  else {
-    if (this.mouseIsDown) {
-      // up
-    }
-    else {
-      // no input
-    }
-  }
-  this.mouseIsDown = mouseIsDownNow;
-}
-
 // Update game objects.
 // We'll use GameInput to detect which keys are down.
 // If you look at the bottom of index.html, we load GameInput
@@ -123,7 +97,7 @@ GameState.prototype.update = function (dt) {
   this.timeSinceLastObstacle += dt;
   // TODO: store possible colors in some constant variable
   // TODO: add more possible colors
-  let colors = [0xff0000, 0x00ff00, 0x0000ff];
+  let colors = [0xFF6B6B, 0x7CFF46, 0x4ECDC4];
   if (this.timeSinceLastObstacle > 2) {
     this.timeSinceLastObstacle = 0;
     let obstacle;

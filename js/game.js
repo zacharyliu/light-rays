@@ -55,7 +55,7 @@ Game.prototype._STATE = {
 }
 
 Game.prototype.over = function() {
-  this.ui.makeToast('U lose');
+  this.ui.makeToast('Game Over');
   this.lifecycle = this._STATE.OVER;
 }
 
@@ -68,6 +68,42 @@ Game.prototype.togglePauseMenu = function() {
     this.lifecycle = this._STATE.PAUSEMENU;
     this.ui.togglePauseMenu(true);
   }
+}
+
+Game.prototype._handleInput = function() {
+  var spaceIsDownNow = GameInput.isDown('SPACE');
+  if (!spaceIsDownNow && this.spaceIsDown) {
+    this.togglePauseMenu();
+  }
+  this.spaceIsDown = spaceIsDownNow;
+  if (this.lifecycle === this._STATE.PAUSEMENU) return;
+  var mouseIsDownNow = GameInput.isDown('MOUSE');
+  if (mouseIsDownNow) {
+    if (this.mouseIsDown) {
+      // hold
+    }
+    else {
+      // down
+      if (this.lifecycle === this._STATE.STARTED) {
+        var mousePos = GameInput.getMousePos();
+        if (!this.mouseOverObject) this.gameState._placeMirror(mousePos.x, mousePos.y);
+      }
+      else if (this.lifecycle === this._STATE.OVER) {
+        this.ui.makeToast('');
+        this.gameState.reset();
+        this.lifecycle = this._STATE.STARTED;
+      }
+    }
+  }
+  else {
+    if (this.mouseIsDown) {
+      // up
+    }
+    else {
+      // no input
+    }
+  }
+  this.mouseIsDown = mouseIsDownNow;
 }
 
 // based on: https://hacks.mozilla.org/2013/05/optimizing-your-javascript-game-for-firefox-os/
@@ -117,7 +153,7 @@ Game.prototype.main = function () {
     return;
   }
 
-  this.gameState.handleInput();
+  this._handleInput();
 
   var now = Date.now();
   var dt = (now - this.then) / 1000.0;

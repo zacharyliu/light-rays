@@ -22,8 +22,31 @@ var Renderer = function (canvas) {
   // this.cameraControls = new THREE.TrackballControls(this.camera, canvas);
 };
 
+Renderer.prototype.createGradient = function(scene) {
+  var canvas = document.createElement( 'canvas' );
+  canvas.width = 128;
+  canvas.height = 128;
+  var context = canvas.getContext( '2d' );
+  var gradient = context.createLinearGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
+  gradient.addColorStop( 0, '#EAECC6' );
+  gradient.addColorStop( 1, '#2BC0E4' );
+  context.fillStyle = gradient;
+  context.fillRect( 0, 0, canvas.width, canvas.height );
+  var shadowTexture = new THREE.Texture( canvas );
+  shadowTexture.needsUpdate = true;
+  var shadowMaterial = new THREE.MeshBasicMaterial( { map: shadowTexture } );
+  var shadowGeo = new THREE.PlaneGeometry( GameState.HEIGHT, GameState.WIDTH, 1, 1 );
+
+  mesh = new THREE.Mesh( shadowGeo, shadowMaterial );
+  mesh.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2, 10);
+  mesh.rotation.set(-Math.PI, 0, Math.PI/2);
+  scene.add( mesh );
+}
+
 Renderer.prototype.initScene = function (scene, effectsScene) {
   this.scene = scene;
+
+  this.createGradient(scene);
 
   // multi-pass technique based on: https://stemkoski.github.io/Three.js/Selective-Glow.html
 
@@ -40,7 +63,7 @@ Renderer.prototype.initScene = function (scene, effectsScene) {
   this.effectsComposer.addPass(render2Pass);
 
   // special effects to be applied to secondary render:
-  this.effectsComposer.addPass(new THREE.BloomPass(3, 25, 4.0, 1024));
+  this.effectsComposer.addPass(new THREE.BloomPass(1, 25, 4.0, 1024));
 
   this.composer = new THREE.EffectComposer( this.renderer );
 

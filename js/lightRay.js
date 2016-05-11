@@ -2,7 +2,7 @@ var LightRay = function (ray, velocity, color) {
   this.ray = ray;
   this.rayCollisions = [];
   this.velocity = velocity;
-  this.color = color || 0xffff00;
+  this.color = color || 0xFF6B6B;
 
   /** @var {THREE.Object3D} Wrapper object for light ray segments */
   this.body = new THREE.Object3D();

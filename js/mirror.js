@@ -4,7 +4,7 @@ var Mirror = function (opts) {
 
   opts = opts || {};
   var geometry = new THREE.BoxBufferGeometry( 10, opts.length || 50, 2 );
-  var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+  var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: opts.color || (Math.random() * 0xffffff) } ) );
   opts.mouseOverBody = new THREE.Mesh(new THREE.SphereGeometry(opts.length / 2 + 10), new THREE.MeshBasicMaterial({visible: false}));
 
   this.originalHex = object.material.emissive.getHex();

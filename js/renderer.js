@@ -74,7 +74,7 @@ Renderer.prototype.initScene = function (scene, effectsScene) {
   this.effectsComposer.addPass(render2Pass);
 
   // special effects to be applied to secondary render:
-  this.effectsComposer.addPass(new THREE.BloomPass(1, 25, 4.0, 1024));
+  this.effectsComposer.addPass(new THREE.BloomPass(1, 25, 4.0, 256));
 
   this.composer = new THREE.EffectComposer( this.renderer );
 

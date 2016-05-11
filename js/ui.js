@@ -16,8 +16,8 @@ UI.prototype.addPoints = function(n) {
   this._updateScore();
 };
 
-UI.prototype.makeToast = function(s) {
-  this.toast.innerHTML = s;
+UI.prototype.toggleGameOver = function (show) {
+  this.toast.style.opacity = show ? 1 : 0;
 };
 
 UI.prototype.togglePauseMenu = function(paused) {

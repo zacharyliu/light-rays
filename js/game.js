@@ -53,7 +53,7 @@ Game.prototype._STATE = {
 Game.prototype.over = function() {
   if (this.lifecycle !== this._STATE.STARTED) return;
 
-  this.ui.makeToast('Game Over');
+  this.ui.toggleGameOver(true);
   this.canvas.style.opacity = 0.1;
   this.lifecycle = this._STATE.OVER;
 }
@@ -90,7 +90,7 @@ Game.prototype._handleInput = function() {
         if (!this.mouseOverObject) this.gameState._placeMirror(mousePos.x, mousePos.y);
       }
       else if (this.lifecycle === this._STATE.OVER) {
-        this.ui.makeToast('');
+        this.ui.toggleGameOver(false);
         this.ui.resetPoints();
         this.canvas.style.opacity = 0;
         setTimeout(() => {

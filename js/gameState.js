@@ -66,7 +66,7 @@ GameState.HEIGHT = 480;
 GameState.BOUNDING_BOX = new THREE.Box3(new THREE.Vector3(0, 0, -1000), new THREE.Vector3(GameState.WIDTH, GameState.HEIGHT, 1000));
 
 GameState.prototype._initLights = function () {
-  var light1 = new THREE.AmbientLight(0x111111);
+  var light1 = new THREE.AmbientLight(0xFFFFFF, 0.5);
   this.scene.add(light1);
 
   var light2 = new THREE.PointLight(0x555555);

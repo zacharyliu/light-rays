@@ -17,12 +17,17 @@ var GameState = function (game) {
   this.scene.add(this.lightRay.body, this.lightRay.particleSystem);
 
   this.effectsScene = new THREE.Scene();
+
   // Add light ray as child without removing from main scene
   this.effectsScene.children.push(this.lightRay.body);
+
   let gameObjectsWrapper = new THREE.Object3D();
   gameObjectsWrapper.children = this.gameObjects;
-  this.scene.children.push(gameObjectsWrapper);
-  this.effectsScene.children.push(gameObjectsWrapper);
+  this.scene.add(gameObjectsWrapper);
+
+  this.gameObjectsEffectsWrapper = new THREE.Object3D();
+  this.effectsScene.add(this.gameObjectsEffectsWrapper);
+
   this.effectsScene.add(new THREE.AmbientLight(0x777777));
 
   this.walls = [
@@ -150,9 +155,19 @@ GameState.prototype.update = function (dt) {
 
   this.collider.collide(this.lightRay, collideObjects);
 
-  // Clear dead game objects (below screen and not colliding)
   for (let i = this.gameObjects.length - 1; i >= 0; i--) {
     let obj = this.gameObjects[i];
+
+    // Illuminate colliding game objects
+    let index = this.gameObjectsEffectsWrapper.children.indexOf(obj);
+    let shouldIlluminate = obj.isColliding && !obj.isAbsorbing;
+    if (shouldIlluminate && index == -1) {
+      this.gameObjectsEffectsWrapper.children.push(obj);
+    } else if (!shouldIlluminate && index != -1) {
+      this.gameObjectsEffectsWrapper.children.splice(index, 1);
+    }
+
+    // Clear dead game objects (below screen and not colliding)
     if (!obj.isColliding && !GameState.BOUNDING_BOX.intersectsBox(new THREE.Box3().setFromObject(obj.body))) {
       this.scene.remove(obj.body);
       this.gameObjects.splice(i, 1);

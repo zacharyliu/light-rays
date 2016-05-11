@@ -61,10 +61,12 @@ Game.prototype.over = function() {
 Game.prototype.togglePauseMenu = function() {
   if (this.lifecycle === this._STATE.PAUSEMENU) {
     this.lifecycle = this._STATE.STARTED;
+    this.canvas.style.opacity = 1;
     this.ui.togglePauseMenu(false);
   }
   else if (this.lifecycle === this._STATE.STARTED) {
     this.lifecycle = this._STATE.PAUSEMENU;
+    this.canvas.style.opacity = 0.1;
     this.ui.togglePauseMenu(true);
   }
 }
@@ -131,8 +133,10 @@ Game.prototype.main = function () {
   var now = Date.now();
   var dt = (now - this.then) / 1000.0;
 
-  this.gameState.update(dt);
-  this.renderer.render(this.gameState.scene);
+  if (this.lifecycle !== this._STATE.PAUSEMENU) {
+    this.gameState.update(dt);
+    this.renderer.render(this.gameState.scene);
+  }
 
   if (this.lifecycle === this._STATE.STARTED) {
     this.ui.addPoints(dt * 491);

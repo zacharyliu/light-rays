@@ -124,9 +124,10 @@ Game.prototype.main = function () {
   var now = Date.now();
   var dt = (now - this.then) / 1000.0;
 
-  if (this.lifecycle === this._STATE.STARTED) {
-    this.gameState.update(dt);
-    this.renderer.render(this.gameState.scene);
+  this.gameState.update(dt);
+  this.renderer.render(this.gameState.scene);
+
+  if (this.lifecycle !== this._STATE.PAUSEMENU) {
     this.ui.addPoints(dt * 491);
   }
 

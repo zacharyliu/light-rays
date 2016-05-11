@@ -6,7 +6,8 @@ var GameState = function (game) {
   this.mouseOverObject = null;
 
   // TODO: Increase velocity as game progresses (level system?)
-  this.velocity = new THREE.Vector3(0, 50, 0);
+  this.velocity = new THREE.Vector3();
+  this.targetVelocity = new THREE.Vector3();
 
   // {type: string, body: instanceof THREE.Object3D}
   this.gameObjects = [];
@@ -98,6 +99,12 @@ GameState.prototype._placeMirror = function(x, y) {
 // If you look at the bottom of index.html, we load GameInput
 // from js/input.js right before app.js
 GameState.prototype.update = function (dt) {
+  // Update velocity
+  let velDiff = new THREE.Vector3().subVectors(this.targetVelocity, this.velocity);
+  if (velDiff.lengthSq() > 0) {
+    this.velocity.add(velDiff.multiplyScalar(3 * dt));
+  }
+
   // Spawn obstacles
   this.generator.update(dt);
 
@@ -153,7 +160,7 @@ GameState.prototype.update = function (dt) {
     this.lightRay.ray = intersection.ray;
     this.lightRay.color = intersection.color;
   } else {
-    // TODO: game over state - light ray left the scene
+    this.targetVelocity.set(0, 0, 0);
     this.game.over();
   }
 };
@@ -169,5 +176,8 @@ GameState.prototype.reset = function () {
   this.gameObjectsEffectsWrapper.children.splice(0);
 
   // Reset obstacle counter
-  this.timeSinceLastObstacle = Number.POSITIVE_INFINITY
+  this.generator.reset();
+
+  // Reset target velocity
+  this.targetVelocity.set(0, 50, 0);
 };

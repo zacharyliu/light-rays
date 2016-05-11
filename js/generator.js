@@ -71,3 +71,7 @@ Generator.prototype._SCENES = [
     return 150;
   }
 ];
+
+Generator.prototype.reset = function () {
+  this._distToNext = 0;
+};

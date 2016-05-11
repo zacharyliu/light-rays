@@ -30,19 +30,11 @@ var GameInputFactory = function (renderer) {
     pressedKeys[key] = status;
   }
 
-  document.addEventListener('keydown', function(e) {
-    setKey(e, true);
-  });
-
-  document.addEventListener('keyup', function(e) {
-    setKey(e, false);
-  });
-
-  ['mousemove', 'touchmove', 'touchstart'].forEach(type => canvas.addEventListener(type, function (e) {
+  function updateMouse(x, y) {
     // Scale position to NDC
     let coords = new THREE.Vector2();
-    coords.x = e.offsetX / parseFloat(e.target.style.width) * 2 - 1;
-    coords.y = -(e.offsetY / parseFloat(e.target.style.height) * 2 - 1);
+    coords.x = x / parseFloat(canvas.style.width) * 2 - 1;
+    coords.y = -(y / parseFloat(canvas.style.height) * 2 - 1);
 
     // Update raycaster
     gamePlaneRaycaster.setFromCamera(coords, camera);
@@ -51,7 +43,23 @@ var GameInputFactory = function (renderer) {
     let N = new THREE.Vector3(0, 0, -1);
     let t = -gamePlaneRaycaster.ray.origin.dot(N) / gamePlaneRaycaster.ray.direction.dot(N);
     mousePos.copy(gamePlaneRaycaster.ray.direction).multiplyScalar(t).add(gamePlaneRaycaster.ray.origin);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    setKey(e, true);
+  });
+
+  document.addEventListener('keyup', function(e) {
+    setKey(e, false);
+  });
+
+  ['touchstart', 'touchmove'].forEach(type => canvas.addEventListener(type, function (e) {
+    updateMouse(e.touches[0].pageX, e.touches[0].pageY);
   }));
+
+  canvas.addEventListener("mousemove", function (e) {
+    updateMouse(e.offsetX, e.offsetY);
+  });
 
   ['mousedown', 'touchstart'].forEach(type => canvas.addEventListener(type, function(e) {
     pressedKeys['MOUSE'] = true;

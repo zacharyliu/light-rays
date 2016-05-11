@@ -1,4 +1,6 @@
 var Renderer = function (canvas) {
+  let self = this;
+
   this.canvas = canvas;
 
   this.stats = new Stats();
@@ -10,7 +12,7 @@ var Renderer = function (canvas) {
   // TODO: add clear color as flat plane in scene
   // this.renderer.setClearColor(0x444444);
 
-  this.camera = new THREE.PerspectiveCamera(50, GameState.WIDTH / GameState.HEIGHT, 1, 10000);
+  this.camera = new THREE.PerspectiveCamera(50, 1, 1, 10000);
   // this.camera = new THREE.OrthographicCamera(GameState.WIDTH / -2, GameState.WIDTH / 2, GameState.HEIGHT / 2, GameState.HEIGHT / -2, 1, 1000);
   this.camera.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2 + 360, -520);
   this.camera.rotation.set(Math.PI + 0.5, 0, 0);
@@ -20,6 +22,10 @@ var Renderer = function (canvas) {
   this.camera2.rotation = this.camera.rotation;
 
   // this.cameraControls = new THREE.TrackballControls(this.camera, canvas);
+
+  window.addEventListener('resize', function () {
+    self.resize();
+  });
 };
 
 Renderer.prototype.createGradient = function(scene) {
@@ -88,11 +94,17 @@ Renderer.prototype.render = function () {
   this.stats.update();
 };
 
-Renderer.prototype.resize = function (width, height) {
+Renderer.prototype.resize = function () {
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+
   this.camera.left = width / -2;
   this.camera.right = width / 2;
   this.camera.top = height / 2;
   this.camera.bottom = height / -2;
+
+  this.camera.aspect = width / height;
+  this.camera.updateProjectionMatrix();
 
   // Camera position updates on its own with orthographic perspective
   // this.camera.position.x = width / 2;

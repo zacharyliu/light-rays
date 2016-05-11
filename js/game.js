@@ -32,10 +32,8 @@ var Game = function (mainContainer) {
     self.pause();
   });
 
-  window.addEventListener('resize', this._resize.bind(this));
-
   //Initially resize the game canvas.
-  this._resize();
+  this.renderer.resize();
 
   // Let's play this game!
   this.then = Date.now();
@@ -105,36 +103,6 @@ Game.prototype._handleInput = function() {
   }
   this.mouseIsDown = mouseIsDownNow;
 }
-
-// based on: https://hacks.mozilla.org/2013/05/optimizing-your-javascript-game-for-firefox-os/
-Game.prototype._resize = function () {
-  var browser = [
-    window.innerWidth,
-    window.innerHeight
-  ];
-  // Minimum scale
-  var scale = Math.min(
-    browser[0] / this.initialCanvasWidth,
-    browser[1] / this.initialCanvasHeight);
-  // Scaled content size
-  var size = [
-    this.initialCanvasWidth * scale,
-    this.initialCanvasHeight * scale
-  ];
-  // Offset from top/left
-  var offset = [
-    (browser[0] - size[0]) / 2,
-    (browser[1] - size[1]) / 2
-  ];
-
-  // Apply CSS transform
-  var rule = "translate(" + offset[0] + "px, " + offset[1] + "px)";
-  this.mainContainer.style.transform = rule;
-  this.mainContainer.style.webkitTransform = rule;
-  this.mainContainer.style.width = size[0] + "px";
-
-  this.renderer.resize(size[0], size[1]);
-};
 
 // Pause and unpause
 Game.prototype.pause = function () {

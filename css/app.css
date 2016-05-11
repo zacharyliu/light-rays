@@ -18,6 +18,8 @@ main {
     -webkit-transform-origin: 0 0;
     user-select: none;
     -webkit-user-select: none;
+    width: 100%;
+    height: 100%;
 }
 
 h1 {

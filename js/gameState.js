@@ -144,6 +144,10 @@ GameState.prototype.update = function (dt) {
   collideObjects.push(this.ceiling, this.floor);
 
   for (let obj of collideObjects) obj.update(dt);
+
+  // Update matrices before calling collider
+  this.scene.updateMatrixWorld();
+
   this.collider.collide(this.lightRay, collideObjects);
 
   // Clear dead game objects (below screen and not colliding)

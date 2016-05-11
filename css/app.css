@@ -77,6 +77,20 @@ intro {
     pointer-events: none;
 }
 
+.lower-right {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    text-align: right;
+    color: black;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.5);
+}
+
 score {
     position: absolute;
     z-index: 1;

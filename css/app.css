@@ -72,6 +72,7 @@ score {
     top: 10px;
     left: 10px;
     color: black;
+    pointer-events: none;
 }
 
 toast {
@@ -83,6 +84,7 @@ toast {
     text-align: center;
     color: black;
     font-size: 1.5em;
+    pointer-events: none;
 }
 
 pause {
@@ -93,4 +95,5 @@ pause {
     text-align: center;
     color: black;
     visibility: hidden;
+    pointer-events: none;
 }

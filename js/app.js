@@ -4,7 +4,6 @@ window.onload = function() {
     var mainContainer = document.querySelector('main');
     var game = new Game(mainContainer);
     game.pause();
-    $(mainContainer).hide();
 
     $('intro button').click(function() {
       $('intro').fadeOut(350, function() {

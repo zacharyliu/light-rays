@@ -69,6 +69,29 @@ Generator.prototype._SCENES = [
     });
     container.add(ob, ob2, fb);
     return 150;
+  },
+  function (container, velocity, lightRay) {
+    let obstacle;
+    let position = new THREE.Vector3(Math.random() * GameState.WIDTH, -10, 0);
+    let color = Generator._randomColor(lightRay.getFinalColor());
+    if (Math.random() < 0.5) {
+      obstacle = new FilterObstacle({
+        radius: 15,
+        position: position,
+        velocity: velocity,
+        color: color
+      });
+    } else {
+      obstacle = new Obstacle({
+        width: 100,
+        height: 10,
+        position: position,
+        velocity: velocity,
+        color: color
+      });
+    }
+    container.add(obstacle);
+    return 60 + Math.random() * 50;
   }
 ];
 

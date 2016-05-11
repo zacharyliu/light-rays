@@ -35,7 +35,7 @@ Renderer.prototype.createGradient = function(scene) {
   var shadowTexture = new THREE.Texture( canvas );
   shadowTexture.needsUpdate = true;
   var shadowMaterial = new THREE.MeshBasicMaterial( { map: shadowTexture } );
-  var shadowGeo = new THREE.PlaneGeometry( GameState.HEIGHT * 1.5, GameState.WIDTH * 1.8, 1, 1 );
+  var shadowGeo = new THREE.PlaneGeometry( GameState.HEIGHT * 3, GameState.WIDTH * 5, 1, 1 );
 
   let mesh = new THREE.Mesh( shadowGeo, shadowMaterial );
   mesh.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2, 10);
@@ -46,7 +46,9 @@ Renderer.prototype.createGradient = function(scene) {
 Renderer.prototype.initScene = function (scene, effectsScene) {
   this.scene = scene;
 
+  let gradientScene = new THREE.Scene();
   this.createGradient(scene);
+  this.createGradient(gradientScene);
 
   // multi-pass technique based on: https://stemkoski.github.io/Three.js/Selective-Glow.html
 
@@ -79,6 +81,10 @@ Renderer.prototype.initScene = function (scene, effectsScene) {
 
   scene.add(this.camera);
   effectsScene.add(this.camera2);
+
+  gradientScene.add(window.cubeCamera);
+  window.cubeCamera.position.copy(this.camera.position);
+  window.cubeCamera.updateCubeMap(this.renderer, gradientScene);
 };
 
 Renderer.prototype.render = function () {

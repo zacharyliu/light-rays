@@ -1,5 +1,9 @@
 window.onload = function() {
 
+    // TODO: move this into another class in actual implementation
+    window.cubeCamera = new THREE.CubeCamera(1, 1000, 256);
+    window.cubeCamera.renderTarget.mapping = THREE.CubeRefractionMapping;
+
     // Create the canvas
     var mainContainer = document.querySelector('main');
     var game = new Game(mainContainer);

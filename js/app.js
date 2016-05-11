@@ -8,7 +8,7 @@ window.onload = function() {
     $('intro button').click(function() {
       $('intro').fadeOut(350, function() {
         $(this).remove();
-        $(mainContainer).fadeIn(200);
+        $(mainContainer).css({'opacity': 1});
         game.unpause();
       });
       return false;

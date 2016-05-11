@@ -12,8 +12,8 @@ var Renderer = function (canvas) {
 
   this.camera = new THREE.PerspectiveCamera(50, GameState.WIDTH / GameState.HEIGHT, 1, 10000);
   // this.camera = new THREE.OrthographicCamera(GameState.WIDTH / -2, GameState.WIDTH / 2, GameState.HEIGHT / 2, GameState.HEIGHT / -2, 1, 1000);
-  this.camera.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2, -520);
-  this.camera.rotation.set(Math.PI, 0, 0);
+  this.camera.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2 + 360, -520);
+  this.camera.rotation.set(Math.PI + 0.5, 0, 0);
 
   this.camera2 = this.camera.clone();
   this.camera2.position = this.camera.position;
@@ -35,7 +35,7 @@ Renderer.prototype.createGradient = function(scene) {
   var shadowTexture = new THREE.Texture( canvas );
   shadowTexture.needsUpdate = true;
   var shadowMaterial = new THREE.MeshBasicMaterial( { map: shadowTexture } );
-  var shadowGeo = new THREE.PlaneGeometry( GameState.HEIGHT, GameState.WIDTH, 1, 1 );
+  var shadowGeo = new THREE.PlaneGeometry( GameState.HEIGHT * 1.1, GameState.WIDTH * 1.1, 1, 1 );
 
   mesh = new THREE.Mesh( shadowGeo, shadowMaterial );
   mesh.position.set(GameState.WIDTH / 2, GameState.HEIGHT / 2, 10);

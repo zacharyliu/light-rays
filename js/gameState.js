@@ -11,7 +11,7 @@ var GameState = function (game) {
   // {type: string, body: instanceof THREE.Object3D}
   this.gameObjects = [];
 
-  this.lightRay = new LightRay(new THREE.Ray(new THREE.Vector3(GameState.WIDTH/2, GameState.HEIGHT, 0), new THREE.Vector3(-1, -2, 0).normalize()), this.velocity);
+  this.lightRay = new LightRay(new THREE.Ray(), this.velocity);
 
   this.scene = new THREE.Scene();
   this.scene.add(this.lightRay.body, this.lightRay.particleSystem);
@@ -155,16 +155,15 @@ GameState.prototype.update = function (dt) {
 
   this.collider.collide(this.lightRay, collideObjects);
 
+  // Clear currently illuminated game objects
+  this.gameObjectsEffectsWrapper.children.splice(0);
+
   for (let i = this.gameObjects.length - 1; i >= 0; i--) {
     let obj = this.gameObjects[i];
 
     // Illuminate colliding game objects
-    let index = this.gameObjectsEffectsWrapper.children.indexOf(obj);
-    let shouldIlluminate = obj.isColliding && !obj.isAbsorbing;
-    if (shouldIlluminate && index == -1) {
+    if (obj.isColliding && !obj.isAbsorbing) {
       this.gameObjectsEffectsWrapper.children.push(obj);
-    } else if (!shouldIlluminate && index != -1) {
-      this.gameObjectsEffectsWrapper.children.splice(index, 1);
     }
 
     // Clear dead game objects (below screen and not colliding)
@@ -187,7 +186,14 @@ GameState.prototype.update = function (dt) {
 
 // Reset game to original state
 GameState.prototype.reset = function () {
-  // TODO: complete reset function
-  // this.lightRay = 
+  // Reset light ray
+  this.lightRay.ray.origin.copy(new THREE.Vector3(GameState.WIDTH/2, GameState.HEIGHT, 0));
+  this.lightRay.ray.direction.copy(new THREE.Vector3(-1, -2, 0).normalize());
+
+  // Remove all game objects
   this.gameObjects.splice(0);
+  this.gameObjectsEffectsWrapper.children.splice(0);
+
+  // Reset obstacle counter
+  this.timeSinceLastObstacle = Number.POSITIVE_INFINITY
 };

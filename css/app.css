@@ -34,6 +34,7 @@ p {
 
 canvas {
     display: block;
+    transition: opacity 0.2s;
 }
 
 button {

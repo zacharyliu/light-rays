@@ -51,7 +51,10 @@ Game.prototype._STATE = {
 }
 
 Game.prototype.over = function() {
+  if (this.lifecycle !== this._STATE.STARTED) return;
+
   this.ui.makeToast('Game Over');
+  this.canvas.style.opacity = 0.1;
   this.lifecycle = this._STATE.OVER;
 }
 
@@ -86,8 +89,12 @@ Game.prototype._handleInput = function() {
       }
       else if (this.lifecycle === this._STATE.OVER) {
         this.ui.makeToast('');
-        this.gameState.reset();
-        this.lifecycle = this._STATE.STARTED;
+        this.canvas.style.opacity = 0;
+        setTimeout(() => {
+          this.canvas.style.opacity = 1;
+          this.gameState.reset();
+          this.lifecycle = this._STATE.STARTED;
+        }, 200);
       }
     }
   }

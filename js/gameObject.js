@@ -43,7 +43,7 @@ GameObject.prototype.handleCollision = function (intersection) {
 };
 
 GameObject.createBox = function (width, height, position) {
-  var body = new THREE.Mesh( new THREE.BoxGeometry(10, height, width), new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+  var body = new THREE.Mesh( new THREE.BoxGeometry(10, height, width), new THREE.MeshBasicMaterial( { visible: false } ) );
   return new GameObject(body, {
     position: position
   });

@@ -25,6 +25,6 @@ window.onload = function() {
       });
     }
     color_cycle();
-    setInterval(color_cycle, 3000);
+    setInterval(color_cycle, 1000);
 
 };
